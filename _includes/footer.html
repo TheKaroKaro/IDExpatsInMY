@@ -1,0 +1,36 @@
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>{{ site.title }}</h3>
+                <p>A curated directory for expats by expats.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="{{ '/' | relative_url }}">Home</a></li>
+                    <li><a href="{{ '/directory.html' | relative_url }}">Directory</a></li>
+                    <li><a href="{{ '/submit.html' | relative_url }}">Submit</a></li>
+                    <li><a href="{{ '/about.html' | relative_url }}">About</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Disclaimer</h3>
+                <p class="disclaimer-text">
+                    This directory is for informational purposes only. We do not endorse or guarantee services. 
+                    Always verify contacts independently. Listings are manually curated but accuracy is not guaranteed.
+                </p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; {{ site.time | date: '%Y' }} {{ site.title }}. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Mobile menu toggle
+    document.querySelector('.menu-toggle').addEventListener('click', function() {
+        document.querySelector('.nav-menu').classList.toggle('show');
+    });
+</script>

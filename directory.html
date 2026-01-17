@@ -1,0 +1,195 @@
+---
+layout: default
+title: Full Directory
+---
+
+<div class="directory-header">
+    <h1>Full Contact Directory</h1>
+    <p>Browse all verified contacts across all categories</p>
+</div>
+
+<div class="filters">
+    <div class="container">
+        <label for="category-filter">Filter by Category:</label>
+        <select id="category-filter" class="filter-select">
+            <option value="all">All Categories</option>
+            <option value="money-exchanger">Money Exchanger</option>
+            <option value="lock-smith">Lock Smith</option>
+            <option value="cargo">Cargo</option>
+            <option value="car-rental">Car Rental</option>
+            <option value="cleaner">Cleaner</option>
+        </select>
+        
+        <label for="search-box">Search:</label>
+        <input type="text" id="search-box" class="search-input" placeholder="Search contacts...">
+    </div>
+</div>
+
+<div class="container">
+    {% assign categories = site.data.contacts | group_by: "category" | sort: "name" %}
+    
+    {% for category in categories %}
+    <section id="{{ category.name | slugify }}" class="category-section">
+        <h2 class="category-title">
+            {{ category.name }}
+            <span class="count-badge">{{ category.items.size }}</span>
+        </h2>
+        
+        <div class="directory-contacts">
+            {% for contact in category.items %}
+            <div class="directory-contact-card" data-category="{{ category.name | slugify }}">
+                <div class="contact-id" id="{{ contact.id }}"></div>
+                <div class="contact-main">
+                    <h3>{{ contact.name }}</h3>
+                    <p class="contact-service">{{ contact.service }}</p>
+                    
+                    <div class="contact-meta">
+                        {% if contact.rating %}
+                        <div class="rating">
+                            {% for i in (1..5) %}
+                                {% if i <= contact.rating %}
+                                    <i class="fas fa-star"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                            <span>({{ contact.reviews }} reviews)</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if contact.verified %}
+                        <span class="verified-badge">
+                            <i class="fas fa-check-circle"></i> Verified
+                        </span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="contact-details">
+                        <p><strong>Phone:</strong> {{ contact.phone }}</p>
+                        {% if contact.whatsapp %}
+                        <p><strong>WhatsApp:</strong> {{ contact.whatsapp }}</p>
+                        {% endif %}
+                        {% if contact.email %}
+                        <p><strong>Email:</strong> {{ contact.email }}</p>
+                        {% endif %}
+                        {% if contact.area %}
+                        <p><strong>Area:</strong> {{ contact.area }}</p>
+                        {% endif %}
+                        {% if contact.languages %}
+                        <p><strong>Languages:</strong> {{ contact.languages | join: ", " }}</p>
+                        {% endif %}
+                        {% if contact.notes %}
+                        <p><strong>Notes:</strong> {{ contact.notes }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="contact-actions">
+                        <a href="tel:{{ contact.phone }}" class="btn-action">
+                            <i class="fas fa-phone"></i> Call
+                        </a>
+                        {% if contact.whatsapp %}
+                        <a href="https://wa.me/{{ contact.whatsapp | remove: '+' | remove: ' ' | remove: '-' }}" class="btn-action" target="_blank">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="contact-comments">
+                    <h4>Comments & Reviews</h4>
+                    <div id="disqus_thread_{{ contact.id }}"></div>
+                    <script>
+                        // Disqus configuration will be added globally
+                        
+    // DISQUS CONFIGURATION - Add this before closing </body> tag in default.html
+    var disqus_config = function () {
+        // Replace with your Disqus shortname
+        this.page.url = '{{ site.url }}{{ page.url }}';
+        this.page.identifier = '{{ contact.id }}';
+        this.page.title = '{{ contact.name }} - Comments';
+    };
+    
+    // Load Disqus when needed
+    function loadDisqus(contactId) {
+        // Update config for this contact
+        disqus_config = function () {
+            this.page.url = '{{ site.url }}/directory.html#' + contactId;
+            this.page.identifier = contactId;
+            this.page.title = document.querySelector('#' + contactId).closest('.directory-contact-card').querySelector('h3').textContent + ' - Comments';
+        };
+        
+        // Remove existing Disqus thread
+        var disqusThread = document.getElementById('disqus_thread');
+        if (disqusThread) {
+            disqusThread.innerHTML = '';
+        }
+        
+        // Reset Disqus
+        if (typeof DISQUS !== 'undefined') {
+            DISQUS.reset({
+                reload: true,
+                config: disqus_config
+            });
+        }
+    }
+    
+    // Load Disqus script (only once)
+    if (!window.disqusLoaded) {
+        (function() {
+            var d = document, s = d.createElement('script');
+            s.src = 'https://idexpatsinmy.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+        window.disqusLoaded = true;
+    }
+</script>
+                    
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endfor %}
+</div>
+
+<script>
+    // Filter functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const categoryFilter = document.getElementById('category-filter');
+        const searchBox = document.getElementById('search-box');
+        const contactCards = document.querySelectorAll('.directory-contact-card');
+        
+        function filterContacts() {
+            const selectedCategory = categoryFilter.value;
+            const searchTerm = searchBox.value.toLowerCase();
+            
+            contactCards.forEach(card => {
+                const category = card.getAttribute('data-category');
+                const text = card.textContent.toLowerCase();
+                
+                const categoryMatch = selectedCategory === 'all' || category === selectedCategory;
+                const searchMatch = text.includes(searchTerm);
+                
+                if (categoryMatch && searchMatch) {
+                    card.style.display = 'block';
+                    // Show parent category if hidden
+                    card.closest('.category-section').style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Hide empty categories
+            document.querySelectorAll('.category-section').forEach(section => {
+                const visibleCards = section.querySelectorAll('.directory-contact-card[style="display: block"]').length;
+                if (visibleCards === 0) {
+                    section.style.display = 'none';
+                }
+            });
+        }
+        
+        categoryFilter.addEventListener('change', filterContacts);
+        searchBox.addEventListener('input', filterContacts);
+    });
+</script>

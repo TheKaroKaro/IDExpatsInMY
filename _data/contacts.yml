@@ -1,0 +1,139 @@
+- id: "money-001"
+  name: "Hassan Exchange"
+  service: "Currency exchange with competitive rates"
+  category: "Money Exchanger"
+  phone: "+12345678901"
+  whatsapp: "+12345678901"
+  email: "hassan@exchange.com"
+  area: "Downtown, Business District"
+  languages: ["English", "Arabic", "Urdu"]
+  rating: 4.5
+  reviews: 23
+  verified: true
+  notes: "Best rates for USD/EUR, open until 10 PM"
+  date_added: "2024-01-15"
+
+- id: "lock-001"
+  name: "Quick Key Locksmith"
+  service: "24/7 emergency lockout service"
+  category: "Lock Smith"
+  phone: "+12345678902"
+  whatsapp: "+12345678902"
+  area: "City-wide service"
+  languages: ["English", "Spanish"]
+  rating: 4.8
+  reviews: 45
+  verified: true
+  notes: "30-minute response time, car and home locks"
+  date_added: "2024-01-10"
+
+- id: "cargo-001"
+  name: "Global Cargo Services"
+  service: "International shipping and relocation"
+  category: "Cargo"
+  phone: "+12345678903"
+  email: "info@globalcargo.example.com"
+  area: "Port Area, Industrial Zone"
+  languages: ["English", "French", "Chinese"]
+  rating: 4.3
+  reviews: 18
+  verified: true
+  notes: "Specializes in expat relocations, door-to-door service"
+  date_added: "2024-01-05"
+
+- id: "car-001"
+  name: "City Car Rentals"
+  service: "Monthly and long-term car rentals"
+  category: "Car Rental"
+  phone: "+12345678904"
+  whatsapp: "+12345678904"
+  email: "rentals@citycars.example.com"
+  area: "Multiple locations"
+  languages: ["English", "Arabic"]
+  rating: 4.0
+  reviews: 32
+  verified: true
+  notes: "International driver's license accepted, insurance included"
+  date_added: "2024-01-12"
+
+- id: "clean-001"
+  name: "Maria's Cleaning Service"
+  service: "Professional home and office cleaning"
+  category: "Cleaner"
+  phone: "+12345678905"
+  area: "Residential areas, City Center"
+  languages: ["English", "Spanish", "Portuguese"]
+  rating: 4.7
+  reviews: 29
+  verified: true
+  notes: "Bonded and insured, eco-friendly products available"
+  date_added: "2024-01-08"
+
+- id: "money-002"
+  name: "Western Union - Main Branch"
+  service: "Money transfers and currency exchange"
+  category: "Money Exchanger"
+  phone: "+12345678906"
+  email: "mainbranch@westernunion.example.com"
+  area: "Shopping Mall, Central Plaza"
+  languages: ["English", "French", "Spanish"]
+  rating: 4.2
+  reviews: 41
+  verified: true
+  notes: "Official Western Union branch, open 7 days a week"
+  date_added: "2024-01-03"
+
+- id: "lock-002"
+  name: "Security Plus Locks"
+  service: "High-security locks and installation"
+  category: "Lock Smith"
+  phone: "+12345678907"
+  whatsapp: "+12345678907"
+  area: "Commercial District"
+  languages: ["English", "German"]
+  rating: 4.9
+  reviews: 15
+  verified: true
+  notes: "Specializes in smart locks and security systems"
+  date_added: "2024-01-18"
+
+- id: "cargo-002"
+  name: "Express Movers"
+  service: "Local moving and furniture transport"
+  category: "Cargo"
+  phone: "+12345678908"
+  area: "City-wide service"
+  languages: ["English", "Arabic"]
+  rating: 4.4
+  reviews: 27
+  verified: true
+  notes: "Same-day service available, careful with fragile items"
+  date_added: "2024-01-14"
+
+- id: "car-002"
+  name: "Budget Wheels"
+  service: "Economy car rentals for long stays"
+  category: "Car Rental"
+  phone: "+12345678909"
+  email: "bookings@budgetwheels.example.com"
+  area: "Airport Location"
+  languages: ["English", "Chinese"]
+  rating: 3.8
+  reviews: 19
+  verified: true
+  notes: "Best for monthly rentals, basic insurance included"
+  date_added: "2024-01-07"
+
+- id: "clean-002"
+  name: "Sparkle Clean Team"
+  service: "Deep cleaning and post-construction cleanup"
+  category: "Cleaner"
+  phone: "+12345678910"
+  whatsapp: "+12345678910"
+  area: "All districts"
+  languages: ["English", "Filipino"]
+  rating: 4.6
+  reviews: 22
+  verified: true
+  notes: "Team of 4 cleaners, equipment provided"
+  date_added: "2024-01-20"

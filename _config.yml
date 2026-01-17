@@ -1,0 +1,33 @@
+title: "Expat Contacts Directory"
+description: "Curated directory of trusted contacts for expats"
+baseurl: "/IDExpatsInMY" # Leave empty for user.github.io repo, otherwise "/repo-name"
+url: "https://TheKaroKaro.github.io" # Change this
+
+# Build settings
+markdown: kramdown
+permalink: pretty
+include: [".html"]
+exclude: []
+
+# Theme (GitHub Pages compatible)
+theme: minima
+
+# Collections
+collections:
+  contacts:
+    output: false
+
+# Site settings
+email: "you@example.com"
+twitter_username: ""
+github_username: ""
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/

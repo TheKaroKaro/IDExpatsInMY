@@ -1,0 +1,213 @@
+---
+layout: default
+title: Submit a Contact
+---
+
+<div class="submit-page">
+    <h1>Submit a Contact</h1>
+    <p class="page-subtitle">Suggest a reliable service provider for our directory</p>
+    
+    <div class="submit-instructions">
+        <div class="alert alert-info">
+            <h3><i class="fas fa-info-circle"></i> Important Information</h3>
+            <ul>
+                <li>All submissions are manually reviewed (takes 3-5 business days)</li>
+                <li>We verify contact information before publishing</li>
+                <li>You must have personal experience with this service provider</li>
+                <li>Commercial submissions from service providers themselves are not accepted</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="submit-form-container">
+        <h2>Contact Submission Form</h2>
+        
+        <!-- OPTION CHOSEN: HTML Form → Telegram Bot API (Simplest & Free) -->
+        <form id="submission-form" class="contact-form">
+            <div class="form-group">
+                <label for="submission-date">Date of Submission *</label>
+                <input type="date" id="submission-date" name="submission-date" required 
+                       value="{{ site.time | date: '%Y-%m-%d' }}" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label for="contact-name">Contact/Company Name *</label>
+                <input type="text" id="contact-name" name="contact-name" required 
+                       placeholder="Full name or business name">
+            </div>
+            
+            <div class="form-group">
+                <label for="service-description">Service Description *</label>
+                <input type="text" id="service-description" name="service-description" required 
+                       placeholder="e.g., Reliable money exchange with good rates">
+            </div>
+            
+            <div class="form-group">
+                <label for="category">Category *</label>
+                <select id="category" name="category" required>
+                    <option value="">Select a category</option>
+                    <option value="Money Exchanger">Money Exchanger</option>
+                    <option value="Lock Smith">Lock Smith</option>
+                    <option value="Cargo">Cargo</option>
+                    <option value="Car Rental">Car Rental</option>
+                    <option value="Cleaner">Cleaner</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone-number">Phone Number *</label>
+                <input type="tel" id="phone-number" name="phone-number" required 
+                       placeholder="+1234567890">
+            </div>
+            
+            <div class="form-group">
+                <label for="whatsapp-number">WhatsApp Number (optional)</label>
+                <input type="tel" id="whatsapp-number" name="whatsapp-number" 
+                       placeholder="+1234567890">
+            </div>
+            
+            <div class="form-group">
+                <label for="email-address">Email Address (optional)</label>
+                <input type="email" id="email-address" name="email-address" 
+                       placeholder="contact@example.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="service-area">Service Area/Location</label>
+                <input type="text" id="service-area" name="service-area" 
+                       placeholder="e.g., Downtown, North District">
+            </div>
+            
+            <div class="form-group">
+                <label for="languages">Languages Spoken (optional)</label>
+                <input type="text" id="languages" name="languages" 
+                       placeholder="e.g., English, Spanish, Arabic">
+            </div>
+            
+            <div class="form-group">
+                <label for="additional-notes">Additional Notes (optional)</label>
+                <textarea id="additional-notes" name="additional-notes" rows="4" 
+                          placeholder="Any important details, working hours, specializations..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="submitter-notes">Your Experience (optional)</label>
+                <textarea id="submitter-notes" name="submitter-notes" rows="3" 
+                          placeholder="Briefly describe your positive experience with this service"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="submitter-email">Your Email (optional, for follow-up)</label>
+                <input type="email" id="submitter-email" name="submitter-email" 
+                       placeholder="your.email@example.com">
+            </div>
+            
+            <div class="form-disclaimer">
+                <p><strong>Disclaimer:</strong> By submitting this form, you confirm that:</p>
+                <ul>
+                    <li>You have personally used this service</li>
+                    <li>Contact information is accurate to your knowledge</li>
+                    <li>You're not submitting your own business for promotion</li>
+                    <li>You understand this is a public directory</li>
+                </ul>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Submit for Review
+                </button>
+                <button type="reset" class="btn btn-secondary">Clear Form</button>
+            </div>
+        </form>
+        
+        <div id="form-message" class="form-message" style="display: none;"></div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('submission-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalText = submitButton.innerHTML;
+        
+        // Disable submit button
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        
+        // Form data
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData);
+        
+        // Format message for Telegram
+        const message = `📋 NEW CONTACT SUBMISSION 📋
+        
+📅 Date: ${data['submission-date']}
+🏢 Contact: ${data['contact-name']}
+📝 Service: ${data['service-description']}
+📍 Category: ${data.category}
+📞 Phone: ${data['phone-number']}
+📱 WhatsApp: ${data['whatsapp-number'] || 'Not provided'}
+📧 Email: ${data['email-address'] || 'Not provided'}
+📍 Area: ${data['service-area'] || 'Not specified'}
+🗣️ Languages: ${data.languages || 'Not specified'}
+📋 Notes: ${data['additional-notes'] || 'None'}
+👤 Submitter Notes: ${data['submitter-notes'] || 'None'}
+📧 Submitter Email: ${data['submitter-email'] || 'Not provided'}
+
+⏰ Timestamp: ${new Date().toISOString()}`;
+        
+        // Encode for URL
+        const encodedMessage = encodeURIComponent(message);
+        
+        try {
+            // TELEGRAM BOT SETUP REQUIRED - Replace with YOUR bot token and chat ID
+            // Instructions in the setup section below
+            const telegramBotToken = 'YOUR_BOT_TOKEN_HERE';
+            const chatId = 'YOUR_CHAT_ID_HERE';
+            
+            const response = await fetch(
+                `https://api.telegram.org/bot${telegramBotToken}/sendMessage?chat_id=${chatId}&text=${encodedMessage}&parse_mode=Markdown`
+            );
+            
+            const result = await response.json();
+            
+            if (result.ok) {
+                // Success
+                document.getElementById('form-message').innerHTML = `
+                    <div class="alert alert-success">
+                        <h3><i class="fas fa-check-circle"></i> Submission Successful!</h3>
+                        <p>Thank you for your submission. It has been sent for manual review.</p>
+                        <p>We will verify the contact information before adding it to the directory.</p>
+                        <p><strong>Note:</strong> This process typically takes 3-5 business days.</p>
+                    </div>
+                `;
+                document.getElementById('form-message').style.display = 'block';
+                document.getElementById('submission-form').reset();
+                
+                // Scroll to message
+                document.getElementById('form-message').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                throw new Error('Telegram API error');
+            }
+            
+        } catch (error) {
+            // Fallback: Show email instructions
+            document.getElementById('form-message').innerHTML = `
+                <div class="alert alert-warning">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Form Submission Issue</h3>
+                    <p>There was a problem with the automated submission. Please email the following information to <strong>your-email@example.com</strong>:</p>
+                    <div class="email-fallback">
+                        <pre>${message}</pre>
+                    </div>
+                    <p><strong>Subject:</strong> New Contact Submission - ${data['contact-name']}</p>
+                </div>
+            `;
+            document.getElementById('form-message').style.display = 'block';
+        } finally {
+            // Re-enable submit button
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalText;
+        }
+    });
+</script>
