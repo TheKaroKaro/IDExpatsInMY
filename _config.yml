@@ -3,6 +3,11 @@ description: "Curated directory of trusted contacts for expats"
 baseurl: "/IDExpatsInMY" # Leave empty for user.github.io repo, otherwise "/repo-name"
 url: "https://TheKaroKaro.github.io" # Change this
 
+# Add to your _config.yml
+disqus:
+  shortname: "idexpatsinmy"  # Replace with your real Disqus shortname
+  enabled: true
+
 # Build settings
 markdown: kramdown
 permalink: pretty

@@ -687,3 +687,29 @@ a:hover {
         grid-template-columns: 1fr;
     }
 }
+/* Disqus Loading State */
+.rating-placeholder {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.rating-loading {
+    color: var(--gray);
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+/* Disqus Thread Styling */
+#disqus_thread {
+    margin-top: 1rem;
+}
+
+.contact-comments {
+    transition: all 0.3s ease;
+}
+
+/* Make Disqus responsive */
+#disqus_thread iframe {
+    max-width: 100%;
+}

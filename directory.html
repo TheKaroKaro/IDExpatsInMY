@@ -44,18 +44,13 @@ title: Full Directory
                     <p class="contact-service">{{ contact.service }}</p>
                     
                     <div class="contact-meta">
-                        {% if contact.rating %}
-                        <div class="rating">
-                            {% for i in (1..5) %}
-                                {% if i <= contact.rating %}
-                                    <i class="fas fa-star"></i>
-                                {% else %}
-                                    <i class="far fa-star"></i>
-                                {% endif %}
-                            {% endfor %}
-                            <span>({{ contact.reviews }} reviews)</span>
+                        <!-- Disqus will handle ratings via upvotes/comments -->
+                        <div class="rating-placeholder" id="rating-{{ contact.id }}">
+                            <span class="rating-text">
+                                <i class="fas fa-star"></i> 
+                                <span class="rating-loading">Loading rating...</span>
+                            </span>
                         </div>
-                        {% endif %}
                         
                         {% if contact.verified %}
                         <span class="verified-badge">
@@ -92,59 +87,24 @@ title: Full Directory
                             <i class="fab fa-whatsapp"></i> WhatsApp
                         </a>
                         {% endif %}
+                        <button class="btn-action toggle-comments" data-contact="{{ contact.id }}">
+                            <i class="fas fa-comments"></i> View Comments
+                        </button>
                     </div>
                 </div>
                 
-                <div class="contact-comments">
+                <!-- DISQUS COMMENTS SECTION -->
+                <div class="contact-comments" id="comments-{{ contact.id }}" style="display: none;">
                     <h4>Comments & Reviews</h4>
                     <div id="disqus_thread_{{ contact.id }}"></div>
                     <script>
-                        // Disqus configuration will be added globally
-                        
-    // DISQUS CONFIGURATION - Add this before closing </body> tag in default.html
-    var disqus_config = function () {
-        // Replace with your Disqus shortname
-        this.page.url = '{{ site.url }}{{ page.url }}';
-        this.page.identifier = '{{ contact.id }}';
-        this.page.title = '{{ contact.name }} - Comments';
-    };
-    
-    // Load Disqus when needed
-    function loadDisqus(contactId) {
-        // Update config for this contact
-        disqus_config = function () {
-            this.page.url = '{{ site.url }}/directory.html#' + contactId;
-            this.page.identifier = contactId;
-            this.page.title = document.querySelector('#' + contactId).closest('.directory-contact-card').querySelector('h3').textContent + ' - Comments';
-        };
-        
-        // Remove existing Disqus thread
-        var disqusThread = document.getElementById('disqus_thread');
-        if (disqusThread) {
-            disqusThread.innerHTML = '';
-        }
-        
-        // Reset Disqus
-        if (typeof DISQUS !== 'undefined') {
-            DISQUS.reset({
-                reload: true,
-                config: disqus_config
-            });
-        }
-    }
-    
-    // Load Disqus script (only once)
-    if (!window.disqusLoaded) {
-        (function() {
-            var d = document, s = d.createElement('script');
-            s.src = 'https://idexpatsinmy.disqus.com/embed.js';
-            s.setAttribute('data-timestamp', +new Date());
-            (d.head || d.body).appendChild(s);
-        })();
-        window.disqusLoaded = true;
-    }
-</script>
-                    
+                        // Disqus configuration for this specific contact
+                        var disqus_config_{{ contact.id }} = function () {
+                            this.page.url = '{{ site.url }}/directory/#{{ contact.id }}';
+                            this.page.identifier = '{{ contact.id }}';
+                            this.page.title = '{{ contact.name }} - Comments & Reviews';
+                        };
+                    </script>
                 </div>
             </div>
             {% endfor %}
@@ -152,6 +112,47 @@ title: Full Directory
     </section>
     {% endfor %}
 </div>
+
+<!-- DISQUS MAIN SCRIPT (LOAD ONCE) -->
+<script>
+    // Load Disqus script only once
+    if (!window.disqusLoaded) {
+        var disqus_shortname = '{{ site.disqus.shortname }}';
+        
+        var dsq = document.createElement('script'); 
+        dsq.type = 'text/javascript'; 
+        dsq.async = true;
+        dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        
+        window.disqusLoaded = true;
+    }
+    
+    // Function to load Disqus for a specific contact
+    function loadDisqusForContact(contactId) {
+        // Update global Disqus config
+        window.disqus_config = function () {
+            this.page.url = window.location.origin + '/directory/#' + contactId;
+            this.page.identifier = contactId;
+            this.page.title = document.querySelector('#rating-' + contactId).closest('.contact-main').querySelector('h3').textContent + ' - Comments';
+        };
+        
+        // Reset Disqus if already loaded
+        if (typeof DISQUS !== 'undefined') {
+            DISQUS.reset({
+                reload: true,
+                config: window.disqus_config
+            });
+        }
+    }
+    
+    // Function to get Disqus comment count (for ratings)
+    function updateDisqusCounts() {
+        if (typeof DISQUSWIDGETS !== 'undefined') {
+            DISQUSWIDGETS.getCount({reset: true});
+        }
+    }
+</script>
 
 <script>
     // Filter functionality
@@ -173,7 +174,6 @@ title: Full Directory
                 
                 if (categoryMatch && searchMatch) {
                     card.style.display = 'block';
-                    // Show parent category if hidden
                     card.closest('.category-section').style.display = 'block';
                 } else {
                     card.style.display = 'none';
@@ -189,7 +189,34 @@ title: Full Directory
             });
         }
         
+        // Toggle comments and load Disqus
+        document.querySelectorAll('.toggle-comments').forEach(button => {
+            button.addEventListener('click', function() {
+                const contactId = this.getAttribute('data-contact');
+                const commentsDiv = document.getElementById('comments-' + contactId);
+                
+                if (commentsDiv.style.display === 'none') {
+                    // Show comments
+                    commentsDiv.style.display = 'block';
+                    this.innerHTML = '<i class="fas fa-comments"></i> Hide Comments';
+                    
+                    // Load Disqus for this contact
+                    loadDisqusForContact(contactId);
+                    
+                    // Update comment counts
+                    setTimeout(updateDisqusCounts, 1000);
+                } else {
+                    // Hide comments
+                    commentsDiv.style.display = 'none';
+                    this.innerHTML = '<i class="fas fa-comments"></i> View Comments';
+                }
+            });
+        });
+        
         categoryFilter.addEventListener('change', filterContacts);
         searchBox.addEventListener('input', filterContacts);
+        
+        // Initialize Disqus counts on page load
+        setTimeout(updateDisqusCounts, 2000);
     });
 </script>
