@@ -9,7 +9,7 @@ title: Home
         <p class="subtitle">Curated directory of reliable services in your new home</p>
         <div class="hero-buttons">
             <a href="#categories" class="btn btn-primary">Browse Categories</a>
-            <a href="/submit.html" class="btn btn-secondary">Suggest a Contact</a>
+            <a href="/submit/" class="btn btn-secondary">Suggest a Contact</a>
         </div>
     </div>
 </section>
@@ -61,7 +61,7 @@ title: Home
                 </div>
                 <h3>{{ category.name }}</h3>
                 <p>{{ category.items.size }} contacts</p>
-                <a href="/directory.html#{{ category.name | slugify }}" class="btn btn-small">View All</a>
+                <a href="/directory/#{{ category.name | slugify }}" class="btn btn-small">View All</a>
             </div>
             {% endfor %}
         </div>
@@ -93,13 +93,13 @@ title: Home
                     {% endif %}
                 </div>
                 <div class="contact-footer">
-                    <a href="/directory.html#{{ contact.id }}" class="btn btn-small">View Details</a>
+                    <a href="/directory/#{{ contact.id }}" class="btn btn-small">View Details</a>
                 </div>
             </div>
             {% endfor %}
         </div>
         <div class="text-center">
-            <a href="/directory.html" class="btn btn-primary">View Full Directory</a>
+            <a href="/directory/" class="btn btn-primary">View Full Directory</a>
         </div>
     </div>
 </section>
