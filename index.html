@@ -1,15 +1,28 @@
 ---
 layout: default
 title: Home
+permalink: /
 ---
 
 <section class="hero">
-    <div class="hero-content">
-        <h1>Trusted Contacts for Expats</h1>
-        <p class="subtitle">Curated directory of reliable services in your new home</p>
-        <div class="hero-buttons">
-            <a href="#categories" class="btn btn-primary">Browse Categories</a>
-            <a href="/submit/" class="btn btn-secondary">Suggest a Contact</a>
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">Find Trusted Services in Malaysia</h1>
+            <p class="hero-subtitle">Verified contacts recommended by the Indonesian expat community</p>
+            <div class="hero-search">
+                <input type="text" placeholder="Search for services..." class="search-input">
+                <button class="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <div class="hero-buttons">
+                <a href="{{ site.baseurl }}/directory/" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Browse Directory
+                </a>
+                <a href="{{ site.baseurl }}/submit/" class="btn btn-secondary">
+                    <i class="fas fa-user-plus"></i> Suggest a Contact
+                </a>
+            </div>
         </div>
     </div>
 </section>
@@ -17,52 +30,77 @@ title: Home
 <section class="stats">
     <div class="container">
         <div class="stats-grid">
-            <div class="stat-item">
-                <i class="fas fa-check-circle"></i>
-                <h3>Manually Verified</h3>
-                <p>Every contact is reviewed by our team</p>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-number" data-count="{{ site.data.contacts | size }}">0</h3>
+                    <p class="stat-label">Verified Contacts</p>
+                </div>
             </div>
-            <div class="stat-item">
-                <i class="fas fa-star"></i>
-                <h3>Community Rated</h3>
-                <p>Real feedback from fellow expats</p>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-number" data-count="
+                        {% assign total_reviews = 0 %}
+                        {% for contact in site.data.contacts %}
+                            {% assign total_reviews = total_reviews | plus: contact.reviews %}
+                        {% endfor %}
+                        {{ total_reviews }}
+                    ">0</h3>
+                    <p class="stat-label">Community Reviews</p>
+                </div>
             </div>
-            <div class="stat-item">
-                <i class="fas fa-shield-alt"></i>
-                <h3>Always Free</h3>
-                <p>No fees for listing or access</p>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 class="stat-number" data-count="24">0</h3>
+                    <p class="stat-label">Active Members</p>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<section id="categories" class="categories-section">
+<section class="categories">
     <div class="container">
-        <h2 class="section-title">Browse by Category</h2>
+        <div class="section-header">
+            <h2 class="section-title">Browse Categories</h2>
+            <p class="section-subtitle">Find services by category</p>
+        </div>
         <div class="categories-grid">
-            {% assign categories = site.data.contacts | group_by: "category" | sort: "name" %}
+            {% assign categories = site.data.contacts | group_by: "category" %}
             {% for category in categories %}
-            <div class="category-card">
+            <a href="{{ site.baseurl }}/directory/#{{ category.name }}" class="category-card">
                 <div class="category-icon">
-                    {% assign cat = category.name %}
-                    {% if cat == "Money Exchanger" %}
-                        <i class="fas fa-money-bill-wave"></i>
-                    {% elsif cat == "Lock Smith" %}
-                        <i class="fas fa-key"></i>
-                    {% elsif cat == "Cargo" %}
-                        <i class="fas fa-shipping-fast"></i>
-                    {% elsif cat == "Car Rental" %}
-                        <i class="fas fa-car"></i>
-                    {% elsif cat == "Cleaner" %}
-                        <i class="fas fa-broom"></i>
-                    {% else %}
-                        <i class="fas fa-user-circle"></i>
-                    {% endif %}
+                    {% case category.name %}
+                        {% when 'money-exchanger' %}
+                            <i class="fas fa-money-bill-wave"></i>
+                        {% when 'lock-smith' %}
+                            <i class="fas fa-key"></i>
+                        {% when 'cargo' %}
+                            <i class="fas fa-shipping-fast"></i>
+                        {% else %}
+                            <i class="fas fa-briefcase"></i>
+                    {% endcase %}
                 </div>
-                <h3>{{ category.name }}</h3>
-                <p>{{ category.items.size }} contacts</p>
-                <a href="/directory/#{{ category.name | slugify }}" class="btn btn-small">View All</a>
-            </div>
+                <div class="category-content">
+                    <h3>
+                        {% case category.name %}
+                            {% when 'money-exchanger' %}Money Exchanger
+                            {% when 'lock-smith' %}Lock Smith
+                            {% when 'cargo' %}Cargo Services
+                            {% else %}{{ category.name }}
+                        {% endcase %}
+                    </h3>
+                    <p>{{ category.items.size }} contacts</p>
+                </div>
+            </a>
             {% endfor %}
         </div>
     </div>
@@ -70,36 +108,66 @@ title: Home
 
 <section class="featured-contacts">
     <div class="container">
-        <h2 class="section-title">Recently Added Contacts</h2>
+        <div class="section-header">
+            <h2 class="section-title">Recently Added</h2>
+            <a href="{{ site.baseurl }}/directory/" class="btn-link">
+                View All <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
         <div class="contacts-grid">
-            {% assign recent_contacts = site.data.contacts | sort: "date_added" | reverse | slice: 0, 6 %}
-            {% for contact in recent_contacts %}
+            {% for contact in site.data.contacts limit: 3 %}
             <div class="contact-card">
                 <div class="contact-header">
-                    <span class="category-badge">{{ contact.category }}</span>
                     <h3>{{ contact.name }}</h3>
-                    <p class="contact-service">{{ contact.service }}</p>
-                </div>
-                <div class="contact-info">
-                    <p><i class="fas fa-phone"></i> {{ contact.phone }}</p>
-                    {% if contact.whatsapp %}
-                    <p><i class="fab fa-whatsapp"></i> {{ contact.whatsapp }}</p>
-                    {% endif %}
-                    {% if contact.email %}
-                    <p><i class="fas fa-envelope"></i> {{ contact.email }}</p>
-                    {% endif %}
-                    {% if contact.area %}
-                    <p><i class="fas fa-map-marker-alt"></i> {{ contact.area }}</p>
+                    {% if contact.verified %}
+                    <span class="verified-badge">
+                        <i class="fas fa-check-circle"></i> Verified
+                    </span>
                     {% endif %}
                 </div>
-                <div class="contact-footer">
-                    <a href="/directory/#{{ contact.id }}" class="btn btn-small">View Details</a>
+                <p class="contact-service">{{ contact.service }}</p>
+                <div class="contact-meta">
+                    <span class="location">
+                        <i class="fas fa-map-marker-alt"></i> {{ contact.location }}
+                    </span>
+                    <span class="rating">
+                        <i class="fas fa-star"></i> {{ contact.rating }}
+                    </span>
+                </div>
+                <div class="contact-actions">
+                    <a href="tel:{{ contact.phone }}" class="btn-action call">
+                        <i class="fas fa-phone"></i> Call
+                    </a>
+                    <a href="{{ site.baseurl }}/directory/{{ contact.id }}/" class="btn-action details">
+                        <i class="fas fa-info-circle"></i> Details
+                    </a>
                 </div>
             </div>
             {% endfor %}
         </div>
-        <div class="text-center">
-            <a href="/directory/" class="btn btn-primary">View Full Directory</a>
-        </div>
     </div>
 </section>
+
+<script>
+// Animate stats counter
+document.addEventListener('DOMContentLoaded', function() {
+    const counters = document.querySelectorAll('.stat-number');
+    const speed = 200;
+    
+    counters.forEach(counter => {
+        const animate = () => {
+            const value = +counter.getAttribute('data-count');
+            const data = +counter.innerText.replace(/,/g, '');
+            const time = value / speed;
+            
+            if(data < value) {
+                counter.innerText = Math.ceil(data + time).toLocaleString();
+                setTimeout(animate, 1);
+            } else {
+                counter.innerText = value.toLocaleString();
+            }
+        }
+        animate();
+    });
+});
+</script>

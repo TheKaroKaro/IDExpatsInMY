@@ -1,38 +1,47 @@
 title: "Expat Contacts Directory"
 description: "Curated directory of trusted contacts for expats"
-baseurl: "/IDExpatsInMY" # Leave empty for user.github.io repo, otherwise "/repo-name"
-url: "https://TheKaroKaro.github.io" # Change this
+baseurl: "/IDExpatsInMY"
+url: "https://thekarokaro.github.io"
 
-# Add to your _config.yml
+# Disqus Comments
 disqus:
-  shortname: "idexpatsinmy"  # Replace with your real Disqus shortname
+  shortname: "idexpatsinmy"
   enabled: true
 
 # Build settings
 markdown: kramdown
 permalink: pretty
-include: [".html"]
-exclude: []
 
-# Theme (GitHub Pages compatible)
-theme: minima
+# Theme (removed minima since we have custom layout)
+theme: null
 
 # Collections
 collections:
   contacts:
-    output: false
+    output: true
+    permalink: /directory/:name
 
 # Site settings
 email: "you@example.com"
-twitter_username: ""
-github_username: ""
+telegram_bot_token: "" # Add your bot token here
+telegram_chat_id: "" # Add your chat ID here
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: "default"
+  - scope:
+      path: "_contacts"
+      type: "contacts"
+    values:
+      layout: "contact"
 
 # Exclude from processing
 exclude:
   - Gemfile
   - Gemfile.lock
   - node_modules
-  - vendor/bundle/
-  - vendor/cache/
-  - vendor/gems/
-  - vendor/ruby/
+  - vendor/
+  - README.md

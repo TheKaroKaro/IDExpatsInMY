@@ -1,222 +1,144 @@
 ---
 layout: default
-title: Full Directory
+title: Directory
+permalink: /directory/
 ---
 
-<div class="directory-header">
-    <h1>Full Contact Directory</h1>
-    <p>Browse all verified contacts across all categories</p>
-</div>
-
-<div class="filters">
+<div class="directory-page">
     <div class="container">
-        <label for="category-filter">Filter by Category:</label>
-        <select id="category-filter" class="filter-select">
-            <option value="all">All Categories</option>
-            <option value="money-exchanger">Money Exchanger</option>
-            <option value="lock-smith">Lock Smith</option>
-            <option value="cargo">Cargo</option>
-            <option value="car-rental">Car Rental</option>
-            <option value="cleaner">Cleaner</option>
-        </select>
+        <div class="directory-header">
+            <h1>Contact Directory</h1>
+            <p>Browse verified contacts by category</p>
+            
+            <div class="directory-controls">
+                <div class="search-box">
+                    <input type="text" id="global-search" placeholder="Search contacts...">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <select id="category-filter" class="filter-select">
+                    <option value="all">All Categories</option>
+                    <option value="money-exchanger">Money Exchanger</option>
+                    <option value="lock-smith">Lock Smith</option>
+                    <option value="cargo">Cargo Services</option>
+                </select>
+            </div>
+        </div>
         
-        <label for="search-box">Search:</label>
-        <input type="text" id="search-box" class="search-input" placeholder="Search contacts...">
+        <div class="directory-content">
+            {% assign categories = site.data.contacts | group_by: "category" %}
+            {% for category in categories %}
+            <section id="{{ category.name }}" class="category-section">
+                <h2 class="category-title">
+                    {% case category.name %}
+                        {% when 'money-exchanger' %}Money Exchanger
+                        {% when 'lock-smith' %}Lock Smith
+                        {% when 'cargo' %}Cargo Services
+                        {% else %}{{ category.name }}
+                    {% endcase %}
+                    <span class="count">({{ category.items.size }})</span>
+                </h2>
+                
+                <div class="contacts-grid">
+                    {% for contact in category.items %}
+                    <div class="contact-card" data-category="{{ contact.category }}">
+                        <div class="contact-header">
+                            <h3>{{ contact.name }}</h3>
+                            {% if contact.verified %}
+                            <span class="verified-badge">
+                                <i class="fas fa-check-circle"></i> Verified
+                            </span>
+                            {% endif %}
+                        </div>
+                        
+                        <p class="contact-service">{{ contact.service }}</p>
+                        
+                        <div class="contact-details">
+                            <div class="detail-item">
+                                <i class="fas fa-phone"></i>
+                                <span>{{ contact.phone }}</span>
+                            </div>
+                            {% if contact.whatsapp %}
+                            <div class="detail-item">
+                                <i class="fab fa-whatsapp"></i>
+                                <span>{{ contact.whatsapp }}</span>
+                            </div>
+                            {% endif %}
+                            <div class="detail-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>{{ contact.location }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-star"></i>
+                                <span>{{ contact.rating }} ({{ contact.reviews }} reviews)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-actions">
+                            <a href="tel:{{ contact.phone }}" class="btn-action call">
+                                <i class="fas fa-phone"></i> Call
+                            </a>
+                            <a href="https://wa.me/{{ contact.whatsapp | remove: '+' }}" 
+                               target="_blank" 
+                               class="btn-action whatsapp" 
+                               {% unless contact.whatsapp %}style="display:none"{% endunless %}>
+                                <i class="fab fa-whatsapp"></i> WhatsApp
+                            </a>
+                            <a href="{{ site.baseurl }}/directory/{{ contact.id }}/" class="btn-action details">
+                                <i class="fas fa-comments"></i> Reviews
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endfor %}
+        </div>
     </div>
 </div>
 
-<div class="container">
-    {% assign categories = site.data.contacts | group_by: "category" | sort: "name" %}
-    
-    {% for category in categories %}
-    <section id="{{ category.name | slugify }}" class="category-section">
-        <h2 class="category-title">
-            {{ category.name }}
-            <span class="count-badge">{{ category.items.size }}</span>
-        </h2>
-        
-        <div class="directory-contacts">
-            {% for contact in category.items %}
-            <div class="directory-contact-card" data-category="{{ category.name | slugify }}">
-                <div class="contact-id" id="{{ contact.id }}"></div>
-                <div class="contact-main">
-                    <h3>{{ contact.name }}</h3>
-                    <p class="contact-service">{{ contact.service }}</p>
-                    
-                    <div class="contact-meta">
-                        <!-- Disqus will handle ratings via upvotes/comments -->
-                        <div class="rating-placeholder" id="rating-{{ contact.id }}">
-                            <span class="rating-text">
-                                <i class="fas fa-star"></i> 
-                                <span class="rating-loading">Loading rating...</span>
-                            </span>
-                        </div>
-                        
-                        {% if contact.verified %}
-                        <span class="verified-badge">
-                            <i class="fas fa-check-circle"></i> Verified
-                        </span>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="contact-details">
-                        <p><strong>Phone:</strong> {{ contact.phone }}</p>
-                        {% if contact.whatsapp %}
-                        <p><strong>WhatsApp:</strong> {{ contact.whatsapp }}</p>
-                        {% endif %}
-                        {% if contact.email %}
-                        <p><strong>Email:</strong> {{ contact.email }}</p>
-                        {% endif %}
-                        {% if contact.area %}
-                        <p><strong>Area:</strong> {{ contact.area }}</p>
-                        {% endif %}
-                        {% if contact.languages %}
-                        <p><strong>Languages:</strong> {{ contact.languages | join: ", " }}</p>
-                        {% endif %}
-                        {% if contact.notes %}
-                        <p><strong>Notes:</strong> {{ contact.notes }}</p>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="contact-actions">
-                        <a href="tel:{{ contact.phone }}" class="btn-action">
-                            <i class="fas fa-phone"></i> Call
-                        </a>
-                        {% if contact.whatsapp %}
-                        <a href="https://wa.me/{{ contact.whatsapp | remove: '+' | remove: ' ' | remove: '-' }}" class="btn-action" target="_blank">
-                            <i class="fab fa-whatsapp"></i> WhatsApp
-                        </a>
-                        {% endif %}
-                        <button class="btn-action toggle-comments" data-contact="{{ contact.id }}">
-                            <i class="fas fa-comments"></i> View Comments
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- DISQUS COMMENTS SECTION -->
-                <div class="contact-comments" id="comments-{{ contact.id }}" style="display: none;">
-                    <h4>Comments & Reviews</h4>
-                    <div id="disqus_thread_{{ contact.id }}"></div>
-                    <script>
-                        // Disqus configuration for this specific contact
-                        var disqus_config_{{ contact.id }} = function () {
-                            this.page.url = '{{ site.url }}/directory/#{{ contact.id }}';
-                            this.page.identifier = '{{ contact.id }}';
-                            this.page.title = '{{ contact.name }} - Comments & Reviews';
-                        };
-                    </script>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </section>
-    {% endfor %}
-</div>
-
-<!-- DISQUS MAIN SCRIPT (LOAD ONCE) -->
 <script>
-    // Load Disqus script only once
-    if (!window.disqusLoaded) {
-        var disqus_shortname = '{{ site.disqus.shortname }}';
-        
-        var dsq = document.createElement('script'); 
-        dsq.type = 'text/javascript'; 
-        dsq.async = true;
-        dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        
-        window.disqusLoaded = true;
-    }
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('global-search');
+    const categoryFilter = document.getElementById('category-filter');
+    const contactCards = document.querySelectorAll('.contact-card');
     
-    // Function to load Disqus for a specific contact
-    function loadDisqusForContact(contactId) {
-        // Update global Disqus config
-        window.disqus_config = function () {
-            this.page.url = window.location.origin + '/directory/#' + contactId;
-            this.page.identifier = contactId;
-            this.page.title = document.querySelector('#rating-' + contactId).closest('.contact-main').querySelector('h3').textContent + ' - Comments';
-        };
+    function filterContacts() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedCategory = categoryFilter.value;
         
-        // Reset Disqus if already loaded
-        if (typeof DISQUS !== 'undefined') {
-            DISQUS.reset({
-                reload: true,
-                config: window.disqus_config
-            });
-        }
-    }
-    
-    // Function to get Disqus comment count (for ratings)
-    function updateDisqusCounts() {
-        if (typeof DISQUSWIDGETS !== 'undefined') {
-            DISQUSWIDGETS.getCount({reset: true});
-        }
-    }
-</script>
-
-<script>
-    // Filter functionality
-    document.addEventListener('DOMContentLoaded', function() {
-        const categoryFilter = document.getElementById('category-filter');
-        const searchBox = document.getElementById('search-box');
-        const contactCards = document.querySelectorAll('.directory-contact-card');
-        
-        function filterContacts() {
-            const selectedCategory = categoryFilter.value;
-            const searchTerm = searchBox.value.toLowerCase();
+        contactCards.forEach(card => {
+            const text = card.textContent.toLowerCase();
+            const category = card.getAttribute('data-category');
+            const categorySection = card.closest('.category-section');
             
-            contactCards.forEach(card => {
-                const category = card.getAttribute('data-category');
-                const text = card.textContent.toLowerCase();
-                
-                const categoryMatch = selectedCategory === 'all' || category === selectedCategory;
-                const searchMatch = text.includes(searchTerm);
-                
-                if (categoryMatch && searchMatch) {
-                    card.style.display = 'block';
-                    card.closest('.category-section').style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+            let matchesSearch = searchTerm === '' || text.includes(searchTerm);
+            let matchesCategory = selectedCategory === 'all' || category === selectedCategory;
             
-            // Hide empty categories
-            document.querySelectorAll('.category-section').forEach(section => {
-                const visibleCards = section.querySelectorAll('.directory-contact-card[style="display: block"]').length;
-                if (visibleCards === 0) {
-                    section.style.display = 'none';
+            if (matchesSearch && matchesCategory) {
+                card.style.display = 'block';
+                if (categorySection) {
+                    categorySection.style.display = 'block';
                 }
-            });
-        }
-        
-        // Toggle comments and load Disqus
-        document.querySelectorAll('.toggle-comments').forEach(button => {
-            button.addEventListener('click', function() {
-                const contactId = this.getAttribute('data-contact');
-                const commentsDiv = document.getElementById('comments-' + contactId);
-                
-                if (commentsDiv.style.display === 'none') {
-                    // Show comments
-                    commentsDiv.style.display = 'block';
-                    this.innerHTML = '<i class="fas fa-comments"></i> Hide Comments';
-                    
-                    // Load Disqus for this contact
-                    loadDisqusForContact(contactId);
-                    
-                    // Update comment counts
-                    setTimeout(updateDisqusCounts, 1000);
-                } else {
-                    // Hide comments
-                    commentsDiv.style.display = 'none';
-                    this.innerHTML = '<i class="fas fa-comments"></i> View Comments';
-                }
-            });
+            } else {
+                card.style.display = 'none';
+            }
         });
         
-        categoryFilter.addEventListener('change', filterContacts);
-        searchBox.addEventListener('input', filterContacts);
-        
-        // Initialize Disqus counts on page load
-        setTimeout(updateDisqusCounts, 2000);
-    });
+        // Hide empty categories
+        document.querySelectorAll('.category-section').forEach(section => {
+            const visibleCards = section.querySelectorAll('.contact-card[style*="display: block"]');
+            if (visibleCards.length === 0) {
+                section.style.display = 'none';
+            } else {
+                section.style.display = 'block';
+            }
+        });
+    }
+    
+    searchInput.addEventListener('input', filterContacts);
+    categoryFilter.addEventListener('change', filterContacts);
+});
 </script>
