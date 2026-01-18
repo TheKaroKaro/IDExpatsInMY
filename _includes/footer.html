@@ -1,19 +1,20 @@
-
 <footer class="site-footer">
     <div class="container">
         <div class="footer-content">
             <div class="footer-section">
                 <h3>{{ site.title }}</h3>
                 <p>A curated directory for expats by expats.</p>
-                <p><i class="fas fa-address-book"></i></p>
+                <div class="footer-icon">
+                    <i class="fas fa-address-book fa-2x"></i>
+                </div>
             </div>
             <div class="footer-section">
                 <h3>Quick Links</h3>
                 <ul>
-                    <li><a href="{{ site.baseurl }}/">Home</a></li>
-                    <li><a href="{{ site.baseurl }}/directory/">Directory</a></li>
-                    <li><a href="{{ site.baseurl }}/submit/">Submit</a></li>
-                    <li><a href="{{ site.baseurl }}/about/">About</a></li>
+                    <li><a href="{{ '/' | relative_url }}">Home</a></li>
+                    <li><a href="{{ '/directory/' | relative_url }}">Directory</a></li>
+                    <li><a href="{{ '/submit/' | relative_url }}">Submit</a></li>
+                    <li><a href="{{ '/about/' | relative_url }}">About</a></li>
                 </ul>
             </div>
             <div class="footer-section">

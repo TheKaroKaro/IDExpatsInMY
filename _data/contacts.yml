@@ -2,9 +2,9 @@
   name: "Hassan Exchange"
   category: "money-exchanger"
   service: "Currency exchange with competitive rates"
-  phone: "+12345678901"
-  whatsapp: "+12345678901"
-  location: "Downtown Area"
+  phone: "+60123456789"
+  whatsapp: "+60123456789"
+  location: "Downtown Kuala Lumpur"
   verified: true
   rating: 4.5
   reviews: 24
@@ -13,8 +13,8 @@
   name: "Ahmad Lock Smith"
   category: "lock-smith"
   service: "24/7 emergency lock services"
-  phone: "+60123456789"
-  whatsapp: "+60123456789"
+  phone: "+60198765432"
+  whatsapp: "+60198765432"
   location: "City Center"
   verified: true
   rating: 4.2
@@ -26,7 +26,7 @@
   service: "International shipping to Indonesia"
   phone: "+6031234567"
   whatsapp: "+60172345678"
-  location: "Port Area"
+  location: "Port Klang"
   verified: true
   rating: 4.7
   reviews: 32

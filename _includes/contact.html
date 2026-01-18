@@ -4,13 +4,13 @@ layout: default
 
 <article class="contact-detail">
     <div class="container">
-        <a href="{{ site.baseurl }}/directory/" class="back-link">
+        <a href="{{ '/directory/' | relative_url }}" class="back-link">
             <i class="fas fa-arrow-left"></i> Back to Directory
         </a>
         
         <div class="contact-header">
             <div class="contact-info">
-                <h1>{{ page.title }}</h1>
+                <h1>{{ page.name }}</h1>
                 <p class="contact-service">{{ page.service }}</p>
                 
                 {% if page.verified %}
@@ -97,7 +97,7 @@ layout: default
                 <div id="disqus_thread"></div>
                 <script>
                     var disqus_config = function () {
-                        this.page.url = '{{ site.url }}{{ site.baseurl }}{{ page.url }}';
+                        this.page.url = '{{ site.url }}{{ page.url | relative_url }}';
                         this.page.identifier = '{{ page.id }}';
                         this.page.title = '{{ page.name }} - Reviews';
                     };
@@ -112,7 +112,8 @@ layout: default
                 <noscript>Please enable JavaScript to view the comments.</noscript>
                 {% else %}
                 <div class="no-comments">
-                    <p>Comments are currently disabled.</p>
+                    <i class="fas fa-comment-slash"></i>
+                    <p>Comments are currently disabled. Enable Disqus in _config.yml</p>
                 </div>
                 {% endif %}
             </div>

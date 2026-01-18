@@ -2,7 +2,7 @@
     <div class="container">
         <nav class="navbar">
             <div class="logo">
-                <a href="{{ site.baseurl }}/">
+                <a href="{{ '/' | relative_url }}">
                     <i class="fas fa-address-book"></i>
                     <span>{{ site.title }}</span>
                 </a>
@@ -13,16 +13,16 @@
             </button>
             
             <ul class="nav-menu">
-                <li><a href="{{ site.baseurl }}/">
+                <li><a href="{{ '/' | relative_url }}" {% if page.url == "/" %}class="active"{% endif %}>
                     <i class="fas fa-home"></i> Home
                 </a></li>
-                <li><a href="{{ site.baseurl }}/directory/">
+                <li><a href="{{ '/directory/' | relative_url }}" {% if page.url contains "/directory/" %}class="active"{% endif %}>
                     <i class="fas fa-list"></i> Directory
                 </a></li>
-                <li><a href="{{ site.baseurl }}/submit/">
+                <li><a href="{{ '/submit/' | relative_url }}" {% if page.url == "/submit/" %}class="active"{% endif %}>
                     <i class="fas fa-plus-circle"></i> Submit
                 </a></li>
-                <li><a href="{{ site.baseurl }}/about/">
+                <li><a href="{{ '/about/' | relative_url }}" {% if page.url == "/about/" %}class="active"{% endif %}>
                     <i class="fas fa-info-circle"></i> About
                 </a></li>
             </ul>

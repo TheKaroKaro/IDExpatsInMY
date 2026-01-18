@@ -3,37 +3,31 @@ description: "Curated directory of trusted contacts for expats"
 baseurl: "/IDExpatsInMY"
 url: "https://thekarokaro.github.io"
 
-# Disqus Comments
-disqus:
-  shortname: "idexpatsinmy"
-  enabled: true
-
 # Build settings
 markdown: kramdown
 permalink: pretty
+timezone: Asia/Kuala_Lumpur
 
-# Theme (removed minima since we have custom layout)
-theme: null
+# Disqus Comments
+disqus:
+  shortname: "idexpatsinmy"
+  enabled: false  # Set to true after you create Disqus account
 
 # Collections
 collections:
   contacts:
     output: true
-    permalink: /directory/:name
-
-# Site settings
-email: "you@example.com"
-telegram_bot_token: "" # Add your bot token here
-telegram_chat_id: "" # Add your chat ID here
+    permalink: /directory/:name/
 
 # Defaults
 defaults:
   - scope:
       path: ""
+      type: "pages"
     values:
       layout: "default"
   - scope:
-      path: "_contacts"
+      path: ""
       type: "contacts"
     values:
       layout: "contact"

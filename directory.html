@@ -13,7 +13,7 @@ permalink: /directory/
             <div class="directory-controls">
                 <div class="search-box">
                     <input type="text" id="global-search" placeholder="Search contacts...">
-                    <button class="search-btn">
+                    <button class="search-btn" id="search-btn">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
@@ -43,7 +43,7 @@ permalink: /directory/
                 
                 <div class="contacts-grid">
                     {% for contact in category.items %}
-                    <div class="contact-card" data-category="{{ contact.category }}">
+                    <div class="contact-card" data-category="{{ contact.category }}" data-id="{{ contact.id }}">
                         <div class="contact-header">
                             <h3>{{ contact.name }}</h3>
                             {% if contact.verified %}
@@ -80,13 +80,14 @@ permalink: /directory/
                             <a href="tel:{{ contact.phone }}" class="btn-action call">
                                 <i class="fas fa-phone"></i> Call
                             </a>
+                            {% if contact.whatsapp %}
                             <a href="https://wa.me/{{ contact.whatsapp | remove: '+' }}" 
                                target="_blank" 
-                               class="btn-action whatsapp" 
-                               {% unless contact.whatsapp %}style="display:none"{% endunless %}>
+                               class="btn-action whatsapp">
                                 <i class="fab fa-whatsapp"></i> WhatsApp
                             </a>
-                            <a href="{{ site.baseurl }}/directory/{{ contact.id }}/" class="btn-action details">
+                            {% endif %}
+                            <a href="#{{ contact.id }}" class="btn-action details" onclick="showContactDetails('{{ contact.id }}')">
                                 <i class="fas fa-comments"></i> Reviews
                             </a>
                         </div>
@@ -99,11 +100,34 @@ permalink: /directory/
     </div>
 </div>
 
+<!-- Contact Details Modal -->
+<div id="contact-modal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <div id="modal-content"></div>
+    </div>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchQuery = urlParams.get('search');
+    const categoryQuery = urlParams.get('category');
+    
+    // Initialize elements
     const searchInput = document.getElementById('global-search');
+    const searchBtn = document.getElementById('search-btn');
     const categoryFilter = document.getElementById('category-filter');
     const contactCards = document.querySelectorAll('.contact-card');
+    
+    // Set initial values from URL
+    if (searchQuery) {
+        searchInput.value = searchQuery;
+    }
+    if (categoryQuery) {
+        categoryFilter.value = categoryQuery;
+    }
     
     function filterContacts() {
         const searchTerm = searchInput.value.toLowerCase();
@@ -136,9 +160,108 @@ document.addEventListener('DOMContentLoaded', function() {
                 section.style.display = 'block';
             }
         });
+        
+        // Update URL
+        const params = new URLSearchParams();
+        if (searchTerm) params.set('search', searchTerm);
+        if (selectedCategory !== 'all') params.set('category', selectedCategory);
+        
+        const newUrl = params.toString() ? `?${params.toString()}` : '{{ "/directory/" | relative_url }}';
+        window.history.replaceState({}, '', newUrl);
     }
     
+    // Event listeners
     searchInput.addEventListener('input', filterContacts);
+    searchBtn.addEventListener('click', filterContacts);
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') filterContacts();
+    });
     categoryFilter.addEventListener('change', filterContacts);
+    
+    // Initial filter
+    filterContacts();
+});
+
+function showContactDetails(contactId) {
+    const modal = document.getElementById('contact-modal');
+    const modalContent = document.getElementById('modal-content');
+    
+    // Find contact data
+    const contacts = {{ site.data.contacts | jsonify }};
+    const contact = contacts.find(c => c.id === contactId);
+    
+    if (contact) {
+        modalContent.innerHTML = `
+            <h3>${contact.name}</h3>
+            <p class="contact-service">${contact.service}</p>
+            
+            <div class="contact-info-modal">
+                <div class="info-item">
+                    <i class="fas fa-phone"></i>
+                    <div>
+                        <strong>Phone:</strong>
+                        <p>${contact.phone}</p>
+                    </div>
+                </div>
+                ${contact.whatsapp ? `
+                <div class="info-item">
+                    <i class="fab fa-whatsapp"></i>
+                    <div>
+                        <strong>WhatsApp:</strong>
+                        <p>${contact.whatsapp}</p>
+                    </div>
+                </div>
+                ` : ''}
+                <div class="info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <strong>Location:</strong>
+                        <p>${contact.location}</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-star"></i>
+                    <div>
+                        <strong>Rating:</strong>
+                        <p>${contact.rating} (${contact.reviews} reviews)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <a href="tel:${contact.phone}" class="btn btn-primary">
+                    <i class="fas fa-phone"></i> Call Now
+                </a>
+                ${contact.whatsapp ? `
+                <a href="https://wa.me/${contact.whatsapp.replace('+', '')}" 
+                   target="_blank" 
+                   class="btn btn-secondary">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </a>
+                ` : ''}
+            </div>
+        `;
+        
+        modal.style.display = 'flex';
+    }
+}
+
+function closeModal() {
+    document.getElementById('contact-modal').style.display = 'none';
+}
+
+// Close modal when clicking outside
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('contact-modal');
+    if (event.target === modal) {
+        closeModal();
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeModal();
+    }
 });
 </script>
