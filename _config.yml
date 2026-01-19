@@ -2,7 +2,7 @@
 title: "Indonesian Expats Malaysia"
 description: "Community directory for Indonesian expats in Malaysia"
 baseurl: "" # Keep empty for custom domain or username.github.io
-url: "https://TheKaroKaro.github.io/IDExpatsInMY/" # Your GitHub Pages URL
+url: "https://TheKaroKaro.github.io/IDExpatsInMY" # Your GitHub Pages URL
 
 # GitHub Pages Requirements
 markdown: kramdown
@@ -37,6 +37,10 @@ defaults:
       type: "pages"
     values:
       layout: "default"
+
+#Add to include
+include:
+  - docs
 
 # Exclude from processing
 exclude:
