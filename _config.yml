@@ -1,7 +1,7 @@
 # Site Settings
 title: "Indonesian Expats Malaysia"
 description: "Community directory for Indonesian expats in Malaysia"
-baseurl: "TheKaroKaro.github.io" # Keep empty for custom domain or username.github.io
+baseurl: "" # Keep empty for custom domain or username.github.io
 url: "https://TheKaroKaro.github.io/IDExpatsInMY/" # Your GitHub Pages URL
 
 # GitHub Pages Requirements
@@ -48,5 +48,5 @@ exclude:
   - vendor/gems/
   - vendor/ruby/
   - README.md
-  - admin/
+  - admin
   - netlify.toml

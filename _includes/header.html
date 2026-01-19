@@ -1,16 +1,16 @@
 <header class="header">
     <nav class="navbar container">
-        <a href="{{ '/' | relative_url }}" class="logo">
+        <a href="{{ '/' | absolute_url }}" class="logo">
             <div class="logo-icon">IE</div>
             <span>IndoExpats.my</span>
         </a>
         
         <div class="nav-links">
-            <a href="{{ '/' | relative_url }}">Home</a>
-            <a href="{{ '/submit' | relative_url }}">Submit Contact</a>
-            <a href="{{ '/categories' | relative_url }}">Categories</a>
-            <a href="{{ '/about' | relative_url }}">About</a>
-            <a href="{{ '/admin' | relative_url }}" class="cta-button">Admin</a>
+            <a href="{{ '/' | absolute_url }}">Home</a>
+            <a href="{{ '/submit' | absolute_url }}">Submit Contact</a>
+            <a href="{{ '/categories' | absolute_url }}">Categories</a>
+            <a href="{{ '/about' | absolute_url }}">About</a>
+            <a href="{{ '/admin' | absolute_url }}" class="cta-button">Admin</a>
         </div>
     </nav>
 </header>

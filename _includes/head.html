@@ -9,13 +9,12 @@
 </title>
 <meta name="description" content="{{ page.description | default: site.description }}">
 
-<!-- CSS -->
-<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-<link rel="stylesheet" href="{{ '/assets/css/form.css' | relative_url }}">
+<!-- ABSOLUTE CSS PATHS for GitHub Pages -->
+<link rel="stylesheet" href="{{ '/assets/css/style.css' | absolute_url }}">
+<link rel="stylesheet" href="{{ '/assets/css/form.css' | absolute_url }}">
 
 <!-- Icons -->
-<link rel="icon" href="{{ '/assets/images/favicon.png' | relative_url }}">
-<link rel="apple-touch-icon" href="{{ '/assets/images/logo.png' | relative_url }}">
+<link rel="icon" href="{{ '/assets/images/favicon.png' | absolute_url }}">
 
 <!-- SEO -->
 {% seo %}
