@@ -1,342 +1,125 @@
 ---
 layout: default
-title: Submit a Contact
-permalink: /submit/
+title: Submit Contact
+permalink: /submit
 ---
 
-<div class="submit-page">
-    <div class="container">
-        <div class="submit-header">
-            <h1>Submit a Contact</h1>
-            <p class="page-subtitle">Share trusted service providers with the community</p>
+<div class="form-section">
+    <h1>Submit New Contact</h1>
+    <p class="form-intro">Share useful contacts with the community. All submissions are reviewed before publishing.</p>
+    
+    <form name="contact-submission" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="contact-form">
+        <input type="hidden" name="form-name" value="contact-submission">
+        <p class="hidden">
+            <label>Don't fill this out if you're human: <input name="bot-field"></label>
+        </p>
+        
+        <div class="form-group">
+            <label for="service-name">Service/Contact Name *</label>
+            <input type="text" id="service-name" name="service-name" class="form-control" required placeholder="e.g., Jastip Jakarta-KL">
         </div>
         
-        <div class="submit-content">
-            <div class="submit-info">
-                <div class="info-card">
-                    <i class="fas fa-info-circle"></i>
-                    <div>
-                        <h3>Submission Process</h3>
-                        <p>All submissions are manually reviewed within 3-5 business days. You'll receive a notification once verified.</p>
-                    </div>
-                </div>
-                
-                <div class="info-card">
-                    <i class="fas fa-shield-alt"></i>
-                    <div>
-                        <h3>Verification</h3>
-                        <p>We verify each contact through multiple community sources before publishing.</p>
-                    </div>
-                </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="category">Category *</label>
+                <select id="category" name="category" class="form-control" required>
+                    <option value="">Select category</option>
+                    <option value="jastip">Jastip</option>
+                    <option value="tuker-duit">Tuker Duit</option>
+                    <option value="kargo">Kargo</option>
+                    <option value="sewa-mobil">Sewa Mobil</option>
+                    <option value="job">Job Openings</option>
+                    <option value="visa">Visa Info</option>
+                    <option value="housing">Housing</option>
+                    <option value="food">Food & Catering</option>
+                    <option value="other">Other Services</option>
+                </select>
             </div>
             
-            <form id="submit-form" class="contact-form">
-                <div class="form-section">
-                    <h3>Contact Details</h3>
-                    
-                    <div class="form-group">
-                        <label for="contact-name">Contact Name *</label>
-                        <input type="text" id="contact-name" name="name" required 
-                               placeholder="Business or individual name"
-                               minlength="2" maxlength="100">
-                        <small>Full name or business name</small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="category">Category *</label>
-                        <select id="category" name="category" required>
-                            <option value="">Select category</option>
-                            <option value="money-exchanger">Money Exchanger</option>
-                            <option value="lock-smith">Lock Smith</option>
-                            <option value="cargo">Cargo Services</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="service">Service Description *</label>
-                        <textarea id="service" name="service" required 
-                                  placeholder="Brief description of services offered"
-                                  rows="3" maxlength="200"></textarea>
-                    </div>
-                </div>
-                
-                <div class="form-section">
-                    <h3>Contact Information</h3>
-                    
-                    <div class="form-group">
-                        <label for="phone">Phone Number *</label>
-                        <input type="tel" id="phone" name="phone" required 
-                               placeholder="+60123456789"
-                               pattern="^\+[0-9]{10,15}$">
-                        <small>Format: +60123456789</small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="whatsapp">WhatsApp Number</label>
-                        <input type="tel" id="whatsapp" name="whatsapp" 
-                               placeholder="+60123456789"
-                               pattern="^\+[0-9]{10,15}$">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="location">Location *</label>
-                        <input type="text" id="location" name="location" required 
-                               placeholder="City/Area in Malaysia"
-                               maxlength="100">
-                    </div>
-                </div>
-                
-                <div class="form-section">
-                    <h3>Your Information (Optional)</h3>
-                    <div class="form-group">
-                        <label for="submitter-name">Your Name</label>
-                        <input type="text" id="submitter-name" name="submitter_name" 
-                               placeholder="Optional">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="submitter-contact">Your Contact</label>
-                        <input type="text" id="submitter-contact" name="submitter_contact" 
-                               placeholder="For verification purposes only">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="notes">Additional Notes</label>
-                        <textarea id="notes" name="notes" 
-                                  placeholder="Any additional information or your experience with this contact"
-                                  rows="3"></textarea>
-                    </div>
-                </div>
-                
-                <!-- Spam Protection -->
-                <div class="spam-protection">
-                    <div class="form-group">
-                        <label for="human-check">What is 2 + 3? *</label>
-                        <input type="text" id="human-check" name="human_check" required 
-                               placeholder="Answer the question">
-                    </div>
-                </div>
-                
-                <div class="form-footer">
-                    <div class="disclaimer">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <p>By submitting, you confirm that this contact information is accurate to the best of your knowledge.</p>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="button" id="preview-btn" class="btn btn-secondary">
-                            <i class="fas fa-eye"></i> Preview
-                        </button>
-                        <button type="submit" id="submit-btn" class="btn btn-primary">
-                            <i class="fas fa-paper-plane"></i> Submit Contact
-                        </button>
-                    </div>
-                </div>
-            </form>
-            
-            <div id="preview-modal" class="modal">
-                <div class="modal-content">
-                    <h3>Submission Preview</h3>
-                    <div id="preview-content"></div>
-                    <div class="modal-actions">
-                        <button id="edit-btn" class="btn btn-secondary">Edit</button>
-                        <button id="confirm-submit" class="btn btn-primary">Confirm Submit</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="success-message" class="message success" style="display: none;">
-                <i class="fas fa-check-circle"></i>
-                <div>
-                    <h3>Submission Received!</h3>
-                    <p>Thank you for your submission. We'll review it within 3-5 business days.</p>
-                </div>
+            <div class="form-group">
+                <label for="contact-person">Contact Person</label>
+                <input type="text" id="contact-person" name="contact-person" class="form-control" placeholder="Name of the contact person">
             </div>
         </div>
-    </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="phone">Phone Number *</label>
+                <input type="tel" id="phone" name="phone" class="form-control" required placeholder="+60123456789">
+            </div>
+            
+            <div class="form-group">
+                <label for="whatsapp">WhatsApp Number</label>
+                <input type="tel" id="whatsapp" name="whatsapp" class="form-control" placeholder="+60123456789 (if different)">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Service Description *</label>
+            <textarea id="description" name="description" class="form-control" required 
+                      placeholder="Describe the service in detail. What do they offer? Areas covered? Pricing? etc."></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="experience">Your Experience (Optional)</label>
+            <textarea id="experience" name="experience" class="form-control" 
+                      placeholder="Share your personal experience with this service. What was good? Anything to note?"></textarea>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="email">Your Email (Optional)</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="We'll notify you when published">
+            </div>
+            
+            <div class="form-group">
+                <label for="verification">Verification: 3 + 4 = ? *</label>
+                <input type="number" id="verification" name="verification" class="form-control" required placeholder="Answer">
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary submit-btn">
+            Submit Contact
+        </button>
+        
+        <p class="form-note">
+            By submitting, you agree that this information will be publicly available on the directory.
+            Spam submissions will be rejected.
+        </p>
+    </form>
 </div>
 
 <script>
-// Telegram Bot Integration with spam protection
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('submit-form');
-    const previewModal = document.getElementById('preview-modal');
-    const successMessage = document.getElementById('success-message');
+    const form = document.querySelector('.contact-form');
     
-    // Rate limiting
-    let lastSubmission = 0;
-    const SUBMISSION_COOLDOWN = 30000; // 30 seconds
-    
-    function formatMessage(data) {
-        return `🚨 NEW CONTACT SUBMISSION 🚨
-        
-📝 *Contact Details:*
-• *Name:* ${data.name}
-• *Category:* ${data.category}
-• *Service:* ${data.service}
-
-📞 *Contact Info:*
-• *Phone:* ${data.phone}
-${data.whatsapp ? `• *WhatsApp:* ${data.whatsapp}` : ''}
-• *Location:* ${data.location}
-
-👤 *Submitted by:*
-${data.submitter_name ? `• *Name:* ${data.submitter_name}` : ''}
-${data.submitter_contact ? `• *Contact:* ${data.submitter_contact}` : ''}
-${data.notes ? `• *Notes:* ${data.notes}` : ''}
-
-📅 *Submitted at:* ${new Date().toLocaleString()}`;
-    }
-    
-    function sendToTelegram(message) {
-        // Replace with your Telegram bot credentials
-        const botToken = ''; // Add your bot token
-        const chatId = ''; // Add your chat ID
-        
-        if (!botToken || !chatId) {
-            console.log('Telegram credentials not set. Message would be:', message);
-            return Promise.resolve(true); // For testing
+    form.addEventListener('submit', function(e) {
+        const verification = document.getElementById('verification').value;
+        if (parseInt(verification) !== 7) {
+            e.preventDefault();
+            alert('Please answer the verification question correctly.');
+            return false;
         }
         
-        const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-        
-        return fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                chat_id: chatId,
-                text: message,
-                parse_mode: 'Markdown'
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.ok) return true;
-            throw new Error('Telegram API error');
-        });
-    }
-    
-    // Form validation
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const now = Date.now();
-        if (now - lastSubmission < SUBMISSION_COOLDOWN) {
-            alert('Please wait 30 seconds before submitting another contact.');
-            return;
-        }
-        
-        // Spam check
-        const humanCheck = document.getElementById('human-check').value.trim();
-        if (humanCheck !== '5') {
-            alert('Please answer the spam prevention question correctly.');
-            return;
-        }
-        
-        // Get form data
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
-        
-        // Validate phone format
-        const phoneRegex = /^\+[0-9]{10,15}$/;
-        if (!phoneRegex.test(data.phone)) {
-            alert('Please enter a valid phone number (e.g., +60123456789)');
-            return;
-        }
-        
-        if (data.whatsapp && !phoneRegex.test(data.whatsapp)) {
-            alert('Please enter a valid WhatsApp number');
-            return;
-        }
-        
-        // Disable submit button
-        const submitBtn = document.getElementById('submit-btn');
+        // Add loading state
+        const submitBtn = form.querySelector('.submit-btn');
+        submitBtn.innerHTML = 'Submitting...';
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-        
-        try {
-            // Format and send to Telegram
-            const message = formatMessage(data);
-            await sendToTelegram(message);
-            
-            // Show success message
-            successMessage.style.display = 'flex';
-            form.style.display = 'none';
-            
-            // Reset form
-            form.reset();
-            
-            // Update last submission time
-            lastSubmission = Date.now();
-            
-            // Scroll to success message
-            successMessage.scrollIntoView({ behavior: 'smooth' });
-            
-        } catch (error) {
-            console.error('Error:', error);
-            alert('There was an error submitting your contact. Please try again.');
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Contact';
-        }
     });
-    
-    // Preview functionality
-    document.getElementById('preview-btn').addEventListener('click', function() {
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
-        
-        // Validate before preview
-        if (!data.name || !data.category || !data.service || !data.phone || !data.location) {
-            alert('Please fill in all required fields before previewing.');
-            return;
-        }
-        
-        const previewContent = document.getElementById('preview-content');
-        previewContent.innerHTML = `
-            <div class="preview-card">
-                <h4>${data.name}</h4>
-                <p><strong>Category:</strong> ${data.category}</p>
-                <p><strong>Service:</strong> ${data.service}</p>
-                <p><strong>Phone:</strong> ${data.phone}</p>
-                ${data.whatsapp ? `<p><strong>WhatsApp:</strong> ${data.whatsapp}</p>` : ''}
-                <p><strong>Location:</strong> ${data.location}</p>
-                ${data.notes ? `<p><strong>Notes:</strong> ${data.notes}</p>` : ''}
-            </div>
-        `;
-        
-        previewModal.style.display = 'flex';
-    });
-    
-    // Modal controls
-    document.getElementById('edit-btn').addEventListener('click', function() {
-        previewModal.style.display = 'none';
-    });
-    
-    document.getElementById('confirm-submit').addEventListener('click', function() {
-        previewModal.style.display = 'none';
-        form.dispatchEvent(new Event('submit'));
-    });
-    
-    // Close modal on outside click
-    previewModal.addEventListener('click', function(e) {
-        if (e.target === previewModal) {
-            previewModal.style.display = 'none';
-        }
-    });
-    
-    // Auto-hide success message after 10 seconds
-    setTimeout(() => {
-        if (successMessage.style.display === 'flex') {
-            successMessage.style.opacity = '0';
-            setTimeout(() => {
-                successMessage.style.display = 'none';
-                successMessage.style.opacity = '1';
-            }, 500);
-        }
-    }, 10000);
 });
 </script>
+
+<style>
+.hidden { display: none; }
+.form-intro { 
+    text-align: center; 
+    margin-bottom: 2rem; 
+    color: var(--gray); 
+}
+.form-note { 
+    margin-top: 1rem; 
+    font-size: 0.9rem; 
+    color: var(--gray); 
+    text-align: center; 
+}
+</style>

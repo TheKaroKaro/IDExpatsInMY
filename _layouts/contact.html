@@ -1,0 +1,93 @@
+---
+layout: default
+---
+
+<article class="contact-detail">
+    <div class="contact-header">
+        <span class="category-badge">{{ page.category | capitalize }}</span>
+        <h1>{{ page.title }}</h1>
+        <p class="meta">Added on {{ page.date | date: "%B %d, %Y" }}</p>
+    </div>
+    
+    <div class="contact-body">
+        <div class="contact-info">
+            <div class="contact-details">
+                {% if page.contact_person %}
+                <div>
+                    <i>👤</i>
+                    <span><strong>Contact Person:</strong> {{ page.contact_person }}</span>
+                </div>
+                {% endif %}
+                
+                {% if page.phone %}
+                <div>
+                    <i>📞</i>
+                    <span><strong>Phone:</strong> {{ page.phone }}</span>
+                </div>
+                {% endif %}
+                
+                {% if page.whatsapp %}
+                <div>
+                    <i>💬</i>
+                    <span><strong>WhatsApp:</strong> {{ page.whatsapp }}</span>
+                </div>
+                {% endif %}
+                
+                {% if page.email %}
+                <div>
+                    <i>📧</i>
+                    <span><strong>Email:</strong> {{ page.email }}</span>
+                </div>
+                {% endif %}
+                
+                {% if page.website %}
+                <div>
+                    <i>🌐</i>
+                    <span><strong>Website:</strong> <a href="{{ page.website }}" target="_blank">{{ page.website }}</a></span>
+                </div>
+                {% endif %}
+                
+                {% if page.location %}
+                <div>
+                    <i>📍</i>
+                    <span><strong>Location:</strong> {{ page.location }}</span>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="description">
+                <h3>Service Description</h3>
+                {{ content }}
+            </div>
+            
+            {% if page.experience %}
+            <div class="experience">
+                <h3>Community Experience</h3>
+                <div class="experience-content">
+                    {{ page.experience | markdownify }}
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if page.verified %}
+            <div class="verified-badge">
+                <i>✅</i> <strong>Community Verified</strong>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="action-buttons">
+        <a href="https://wa.me/{{ page.whatsapp | default: page.phone | remove: '+' | remove: ' ' }}" 
+           class="btn btn-primary" target="_blank">
+            <i>💬</i> Contact via WhatsApp
+        </a>
+        <a href="tel:{{ page.phone }}" class="btn btn-secondary">
+            <i>📞</i> Call Now
+        </a>
+    </div>
+    
+    <div class="back-link">
+        <a href="{{ '/' | relative_url }}">← Back to Directory</a>
+    </div>
+</article>

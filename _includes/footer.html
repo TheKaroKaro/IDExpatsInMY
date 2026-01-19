@@ -1,32 +1,39 @@
-<footer class="site-footer">
+<footer class="footer">
     <div class="container">
         <div class="footer-content">
             <div class="footer-section">
-                <h3>{{ site.title }}</h3>
-                <p>A curated directory for expats by expats.</p>
-                <div class="footer-icon">
-                    <i class="fas fa-address-book fa-2x"></i>
-                </div>
+                <h3>IndoExpats.my</h3>
+                <p>Community-driven directory for Indonesian expats in Malaysia. By expats, for expats.</p>
             </div>
+            
             <div class="footer-section">
                 <h3>Quick Links</h3>
-                <ul>
+                <ul class="footer-links">
                     <li><a href="{{ '/' | relative_url }}">Home</a></li>
-                    <li><a href="{{ '/directory/' | relative_url }}">Directory</a></li>
-                    <li><a href="{{ '/submit/' | relative_url }}">Submit</a></li>
-                    <li><a href="{{ '/about/' | relative_url }}">About</a></li>
+                    <li><a href="{{ '/submit' | relative_url }}">Submit Contact</a></li>
+                    <li><a href="{{ '/categories' | relative_url }}">Categories</a></li>
+                    <li><a href="{{ '/about' | relative_url }}">About</a></li>
                 </ul>
             </div>
+            
             <div class="footer-section">
-                <h3>Disclaimer</h3>
-                <p class="disclaimer-text">
-                    This directory is for informational purposes only. We do not endorse or guarantee services. 
-                    Always verify contacts independently.
-                </p>
+                <h3>Categories</h3>
+                <ul class="footer-links">
+                    {% for category in site.data.categories limit: 6 %}
+                    <li><a href="{{ '/categories/' | append: category.slug | relative_url }}">{{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Connect</h3>
+                <p>Join our WhatsApp group for real-time discussions and updates.</p>
+                <a href="#" class="btn btn-primary" style="margin-top: 10px;">Join Community</a>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; {{ site.time | date: '%Y' }} {{ site.title }}. All rights reserved.</p>
+        
+        <div class="copyright">
+            <p>&copy; {{ site.time | date: '%Y' }} Indonesian Expats Malaysia. Built with ❤️ for the community.</p>
         </div>
     </div>
 </footer>

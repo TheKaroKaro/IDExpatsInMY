@@ -1,0 +1,36 @@
+<article class="contact-card">
+    <span class="category-badge">{{ include.contact.category | capitalize }}</span>
+    
+    <div class="contact-info">
+        <h3>{{ include.contact.title }}</h3>
+        
+        <p>{{ include.contact.description | truncate: 120 }}</p>
+        
+        <div class="contact-details">
+            {% if include.contact.contact_person %}
+            <div>
+                <i>👤</i>
+                <span>{{ include.contact.contact_person }}</span>
+            </div>
+            {% endif %}
+            
+            <div>
+                <i>📞</i>
+                <span>{{ include.contact.phone }}</span>
+            </div>
+            
+            {% if include.contact.location %}
+            <div>
+                <i>📍</i>
+                <span>{{ include.contact.location }}</span>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="action-buttons">
+            <a href="{{ include.contact.url | relative_url }}" class="btn btn-primary">View Details</a>
+            <a href="https://wa.me/{{ include.contact.whatsapp | default: include.contact.phone | remove: '+' | remove: ' ' }}" 
+               class="btn btn-secondary" target="_blank">WhatsApp</a>
+        </div>
+    </div>
+</article>

@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - IndoExpats Directory</title>
+    <style>
+        :root {
+            --primary: #2A9134;
+            --secondary: #FF6B35;
+            --dark: #1A1F2C;
+            --light: #F8F9FA;
+            --gray: #6C757D;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .admin-container {
+            width: 100%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .admin-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .admin-header p {
+            opacity: 0.9;
+        }
+        
+        .admin-nav {
+            background: var(--dark);
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .admin-nav button {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-nav button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .admin-nav button.active {
+            background: var(--primary);
+        }
+        
+        .admin-content {
+            padding: 2rem;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .stat-card h3 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .submissions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .submission-card {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .submission-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .submission-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .submission-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--dark);
+        }
+        
+        .submission-category {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .submission-details {
+            margin: 1rem 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .detail-item {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        .detail-item strong {
+            color: var(--dark);
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-approve {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-reject {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-view {
+            background: var(--dark);
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray);
+        }
+        
+        .login-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .form-group label {
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        .form-control {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .login-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-container {
+                border-radius: 10px;
+            }
+            
+            .admin-content {
+                padding: 1rem;
+            }
+            
+            .submission-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen (Replace with Netlify Identity or your auth) -->
+    <div id="loginScreen" class="login-container">
+        <h2 style="text-align: center; margin-bottom: 2rem; color: var(--dark);">Admin Login</h2>
+        
+        <div class="login-form">
+            <div class="form-group">
+                <label for="password">Enter Admin Password:</label>
+                <input type="password" id="password" class="form-control" placeholder="Enter admin password">
+                <small>Contact the site owner for the password</small>
+            </div>
+            
+            <button type="button" id="loginBtn" class="login-btn">Login</button>
+        </div>
+    </div>
+    
+    <!-- Admin Dashboard (Hidden by default) -->
+    <div id="adminDashboard" class="admin-container" style="display: none;">
+        <div class="admin-header">
+            <h1>📋 Admin Panel</h1>
+            <p>Indonesian Expats Directory Management</p>
+        </div>
+        
+        <div class="admin-nav">
+            <button class="nav-btn active" data-tab="dashboard">Dashboard</button>
+            <button class="nav-btn" data-tab="submissions">Pending Submissions (3)</button>
+            <button class="nav-btn" data-tab="published">Published Contacts</button>
+            <button class="nav-btn" data-tab="settings">Settings</button>
+            <button id="logoutBtn" style="margin-left: auto;">Logout</button>
+        </div>
+        
+        <div class="admin-content">
+            <!-- Dashboard Tab -->
+            <div id="dashboardTab" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Contacts</h3>
+                        <div class="number" id="totalContacts">42</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Pending Review</h3>
+                        <div class="number" id="pendingCount">3</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Categories</h3>
+                        <div class="number" id="categoryCount">8</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>This Month</h3>
+                        <div class="number" id="monthlySubmissions">12</div>
+                    </div>
+                </div>
+                
+                <h3>Recent Activity</h3>
+                <div class="submissions-list">
+                    <!-- Recent submissions will appear here -->
+                </div>
+            </div>
+            
+            <!-- Submissions Tab -->
+            <div id="submissionsTab" class="tab-content">
+                <h2>Pending Submissions</h2>
+                <div id="pendingSubmissions" class="submissions-list">
+                    <!-- Pending submissions will appear here -->
+                    <div class="empty-state" id="emptyPending">
+                        <p>No pending submissions. Check back later!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Published Tab -->
+            <div id="publishedTab" class="tab-content">
+                <h2>Published Contacts</h2>
+                <div id="publishedList" class="submissions-list">
+                    <!-- Published contacts will appear here -->
+                </div>
+            </div>
+            
+            <!-- Settings Tab -->
+            <div id="settingsTab" class="tab-content">
+                <h2>Settings</h2>
+                <div class="form-group">
+                    <label>Admin Password</label>
+                    <input type="password" class="form-control" id="newPassword" placeholder="New password">
+                    <button class="btn" style="margin-top: 10px;">Change Password</button>
+                </div>
+                
+                <div style="margin-top: 2rem;">
+                    <h3>Export Data</h3>
+                    <button class="btn btn-view" onclick="exportData()">Export All Contacts (CSV)</button>
+                    <button class="btn btn-view" onclick="backupData()" style="margin-left: 10px;">Backup to GitHub</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple password protection (Replace with Netlify Identity for production)
+        const ADMIN_PASSWORD = 'indoexpats2024'; // Change this!
+        
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            const password = document.getElementById('password').value;
+            
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                localStorage.setItem('adminLoggedIn', 'true');
+            } else {
+                alert('Incorrect password!');
+            }
+        });
+        
+        // Check if already logged in
+        if (localStorage.getItem('adminLoggedIn') === 'true') {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'block';
+        }
+        
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('adminLoggedIn');
+            location.reload();
+        });
+        
+        // Tab navigation
+        document.querySelectorAll('.nav-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons and tabs
+                document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Show corresponding tab
+                const tabId = this.getAttribute('data-tab') + 'Tab';
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Sample submission data (In production, this would come from Netlify Forms or your backend)
+        const sampleSubmissions = [
+            {
+                id: 1,
+                title: "Jastip Bandung-KL",
+                category: "jastip",
+                contactPerson: "Siti Aisyah",
+                phone: "+60123456789",
+                whatsapp: "+60123456789",
+                description: "Weekly jastip service from Bandung to KL. Specializing in food items and batik.",
+                experience: "Very reliable, always on time. Packages are well-packed.",
+                submitted: "2024-01-15",
+                email: "user@example.com"
+            },
+            {
+                id: 2,
+                title: "Currency Exchange JB",
+                category: "tuker-duit",
+                contactPerson: "Pak Joko",
+                phone: "+60198765432",
+                description: "Best rates for IDR-MYR exchange in Johor Bahru area. Open daily 9AM-9PM.",
+                submitted: "2024-01-14"
+            },
+            {
+                id: 3,
+                title: "Car Rental Kuala Lumpur",
+                category: "sewa-mobil",
+                phone: "+60168889999",
+                description: "Affordable car rental with driver. Daily, weekly, monthly rates available.",
+                submitted: "2024-01-13"
+            }
+        ];
+        
+        // Display pending submissions
+        function displaySubmissions() {
+            const container = document.getElementById('pendingSubmissions');
+            const emptyState = document.getElementById('emptyPending');
+            
+            if (sampleSubmissions.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            container.innerHTML = '';
+            
+            sampleSubmissions.forEach(submission => {
+                const card = document.createElement('div');
+                card.className = 'submission-card';
+                card.innerHTML = `
+                    <div class="submission-header">
+                        <div class="submission-title">${submission.title}</div>
+                        <div class="submission-category">${submission.category}</div>
+                    </div>
+                    
+                    <div class="submission-details">
+                        ${submission.contactPerson ? `
+                            <div class="detail-item">
+                                <strong>Contact Person</strong>
+                                ${submission.contactPerson}
+                            </div>
+                        ` : ''}
+                        
+                        <div class="detail-item">
+                            <strong>Phone</strong>
+                            ${submission.phone}
+                        </div>
+                        
+                        ${submission.whatsapp ? `
+                            <div class="detail-item">
+                                <strong>WhatsApp</strong>
+                                ${submission.whatsapp}
+                            </div>
+                        ` : ''}
+                        
+                        <div class="detail-item" style="grid-column: 1 / -1;">
+                            <strong>Description</strong>
+                            ${submission.description}
+                        </div>
+                        
+                        ${submission.experience ? `
+                            <div class="detail-item" style="grid-column: 1 / -1;">
+                                <strong>User Experience</strong>
+                                ${submission.experience}
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-approve" onclick="approveSubmission(${submission.id})">✅ Approve</button>
+                        <button class="btn btn-reject" onclick="rejectSubmission(${submission.id})">❌ Reject</button>
+                        <button class="btn btn-view" onclick="viewSubmission(${submission.id})">👁️ View Details</button>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+        
+        // Admin functions
+        function approveSubmission(id) {
+            if (confirm('Approve this submission? It will be published on the directory.')) {
+                alert(`Submission #${id} approved! (In production, this would create a GitHub file)`);
+                // Here you would:
+                // 1. Create a markdown file in the _contacts collection
+                // 2. Push to GitHub via API
+                // 3. Remove from pending submissions
+                displaySubmissions();
+            }
+        }
+        
+        function rejectSubmission(id) {
+            const reason = prompt('Reason for rejection (optional):');
+            if (reason !== null) {
+                alert(`Submission #${id} rejected. Reason: ${reason || 'Not specified'}`);
+                // Remove from pending submissions
+                displaySubmissions();
+            }
+        }
+        
+        function viewSubmission(id) {
+            alert(`Viewing submission #${id}. In production, this would show more details.`);
+        }
+        
+        function exportData() {
+            alert('Exporting data... In production, this would generate a CSV file.');
+        }
+        
+        function backupData() {
+            alert('Backing up to GitHub... In production, this would commit all data.');
+        }
+        
+        // Initialize
+        displaySubmissions();
+        document.getElementById('pendingCount').textContent = sampleSubmissions.length;
+        
+        // Listen for form submissions from Netlify (would need webhook setup)
+        // This is a placeholder for the complete integration
+        function checkForNewSubmissions() {
+            // In production, you would:
+            // 1. Fetch from Netlify Forms API
+            // 2. Or use GitHub webhooks
+            // 3. Or use a serverless function
+            console.log('Checking for new submissions...');
+        }
+        
+        // Check every 5 minutes
+        setInterval(checkForNewSubmissions, 300000);
+    </script>
+</body>
+</html>

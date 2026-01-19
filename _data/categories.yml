@@ -1,0 +1,44 @@
+- name: Jastip
+  slug: jastip
+  icon: 🛍️
+  description: Jasa titip from Indonesia to Malaysia
+  
+- name: Tuker Duit
+  slug: tuker-duit
+  icon: 💱
+  description: Currency exchange services
+  
+- name: Kargo
+  slug: kargo
+  icon: 📦
+  description: Shipping and cargo services
+  
+- name: Sewa Mobil
+  slug: sewa-mobil
+  icon: 🚗
+  description: Car rental services
+  
+- name: Job Openings
+  slug: job
+  icon: 💼
+  description: Job opportunities
+  
+- name: Visa Info
+  slug: visa
+  icon: 🛂
+  description: Visa and immigration information
+  
+- name: Housing
+  slug: housing
+  icon: 🏠
+  description: Rental and accommodation
+  
+- name: Food & Catering
+  slug: food
+  icon: 🍲
+  description: Indonesian food and catering services
+  
+- name: Other Services
+  slug: other
+  icon: 🔧
+  description: Other useful services

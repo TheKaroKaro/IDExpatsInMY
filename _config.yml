@@ -1,41 +1,52 @@
-title: "Expat Contacts Directory"
-description: "Curated directory of trusted contacts for expats"
-baseurl: "/IDExpatsInMY"
-url: "https://thekarokaro.github.io"
+# Site Settings
+title: "Indonesian Expats Malaysia"
+description: "Community directory for Indonesian expats in Malaysia - Jastip, Tuker Duit, Kargo, Sewa Mobil, Jobs, Visa Info"
+baseurl: ""
+url: "https://your-site.netlify.app"
+repository: "your-username/your-repo"
 
-# Build settings
+# Build Settings
 markdown: kramdown
 permalink: pretty
-timezone: Asia/Kuala_Lumpur
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-feed
+  - jekyll-paginate
 
-# Disqus Comments
-disqus:
-  shortname: "idexpatsinmy"
-  enabled: false  # Set to true after you create Disqus account
-
-# Collections
-collections:
-  contacts:
-    output: true
-    permalink: /directory/:name/
-
-# Defaults
-defaults:
-  - scope:
-      path: ""
-      type: "pages"
-    values:
-      layout: "default"
-  - scope:
-      path: ""
-      type: "contacts"
-    values:
-      layout: "contact"
-
-# Exclude from processing
+# Custom Settings
+paginate: 12
+paginate_path: "/page:num/"
 exclude:
   - Gemfile
   - Gemfile.lock
   - node_modules
-  - vendor/
-  - README.md
+  - vendor
+  - admin
+  - netlify.toml
+
+collections:
+  contacts:
+    output: true
+    permalink: /contacts/:slug
+
+defaults:
+  - scope:
+      path: ""
+      type: contacts
+    values:
+      layout: contact
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+
+# SEO
+twitter:
+  username: indoexpatsmy
+logo: "/assets/images/logo.png"
+
+# Custom variables
+theme_color: "#2A9134"
+accent_color: "#FF6B35"

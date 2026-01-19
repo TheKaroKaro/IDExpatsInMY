@@ -1,0 +1,57 @@
+---
+layout: default
+---
+
+<section class="hero">
+    <h1>Indonesian Expats Directory 🇮🇩→🇲🇾</h1>
+    <p>Find trusted contacts for Jastip, Tuker Duit, Kargo, Sewa Mobil, Jobs, Visa Info, and more. Community-driven by expats for expats.</p>
+    
+    <div class="search-container">
+        <input type="text" class="search-input" placeholder="🔍 Search for services, contacts, or categories..." id="searchInput">
+    </div>
+</section>
+
+<div class="categories">
+    <a href="{{ '/' | relative_url }}" class="category-tag {% unless page.category %}active{% endunless %}">All</a>
+    {% for category in site.data.categories %}
+    <a href="{{ '/categories/' | append: category.slug | relative_url }}" 
+       class="category-tag {% if page.category == category.slug %}active{% endif %}">
+        {{ category.name }}
+    </a>
+    {% endfor %}
+</div>
+
+<div class="stats">
+    <div class="stat-item">
+        <div class="stat-number">{{ site.contacts.size }}</div>
+        <div class="stat-label">Verified Contacts</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">{{ site.data.categories.size }}</div>
+        <div class="stat-label">Categories</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">{{ site.posts.size }}</div>
+        <div class="stat-label">Community Tips</div>
+    </div>
+</div>
+
+<section class="contacts-grid" id="contactsGrid">
+    {% for contact in site.contacts %}
+        {% include contact-card.html contact=contact %}
+    {% endfor %}
+</section>
+
+{% if paginator.total_pages > 1 %}
+<nav class="pagination">
+    {% if paginator.previous_page %}
+        <a href="{{ paginator.previous_page_path }}" class="btn btn-secondary">← Previous</a>
+    {% endif %}
+    
+    <span>Page {{ paginator.page }} of {{ paginator.total_pages }}</span>
+    
+    {% if paginator.next_page %}
+        <a href="{{ paginator.next_page_path }}" class="btn btn-primary">Next →</a>
+    {% endif %}
+</nav>
+{% endif %}
