@@ -1,52 +1,52 @@
 # Site Settings
 title: "Indonesian Expats Malaysia"
-description: "Community directory for Indonesian expats in Malaysia - Jastip, Tuker Duit, Kargo, Sewa Mobil, Jobs, Visa Info"
-baseurl: ""
-url: "https://your-site.netlify.app"
-repository: "your-username/your-repo"
+description: "Community directory for Indonesian expats in Malaysia"
+baseurl: "" # Keep empty for custom domain or username.github.io
+url: "https://TheKaroKaro.github.io/IDExpatsInMY/" # Your GitHub Pages URL
 
-# Build Settings
+# GitHub Pages Requirements
 markdown: kramdown
-permalink: pretty
+highlighter: rouge
 plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
   - jekyll-feed
   - jekyll-paginate
 
-# Custom Settings
-paginate: 12
-paginate_path: "/page:num/"
-exclude:
-  - Gemfile
-  - Gemfile.lock
-  - node_modules
-  - vendor
-  - admin
-  - netlify.toml
+# GitHub Pages specific
+github: [metadata]
 
+# Safe mode compatibility
+safe: true
+
+# Collections
 collections:
   contacts:
     output: true
     permalink: /contacts/:slug
 
+# Defaults
 defaults:
   - scope:
-      path: ""
-      type: contacts
+      path: "contacts"
+      type: "contacts"
     values:
-      layout: contact
+      layout: "contact"
   - scope:
       path: ""
-      type: posts
+      type: "pages"
     values:
-      layout: post
+      layout: "default"
 
-# SEO
-twitter:
-  username: indoexpatsmy
-logo: "/assets/images/logo.png"
-
-# Custom variables
-theme_color: "#2A9134"
-accent_color: "#FF6B35"
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - README.md
+  - admin/
+  - netlify.toml
