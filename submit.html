@@ -185,7 +185,7 @@
                 const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}`, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+                        'Authorization': `Bearer ${AIRTABLE_PAT}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(data)
