@@ -20,6 +20,10 @@
             background-color: #2c3e50;
             color: white;
             padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
         }
         nav a {
             color: white;
@@ -38,39 +42,126 @@
         .content {
             background: white;
             padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .content h2 {
+            color: #2c3e50;
+            margin: 1.5rem 0 0.5rem;
+        }
+        .content p {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+        .content ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: #555;
+        }
+        .content li {
+            margin-bottom: 0.3rem;
+        }
+        .community-stats {
+            background: #e9f2fa;
+            padding: 1rem;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: #7f8c8d;
         }
     </style>
 </head>
 <body>
     <nav>
-        <div class="container">
-            <a href="/">Home</a>
-            <a href="/submit.html">Submit Service</a>
-            <a href="/about.html">About</a>
+        <div>
+            <a href="/">🏠 Home</a>
+            <a href="/submit.html">➕ Add Service</a>
+            <a href="/submit-article.html">📝 Share Article</a>
+            <a href="/about.html">ℹ️ About</a>
         </div>
+        <span style="background:#e74c3c; padding:0.2rem 0.8rem; border-radius:20px; font-size:0.8rem;">👥 600+ Members</span>
     </nav>
 
     <div class="container">
         <h1>About Us</h1>
         <div class="content">
-            <p>Welcome to Indonesian Expats Malaysia - your community-driven platform for finding trusted services in Malaysia.</p>
+            <p>Welcome to <strong>IndoMY Community</strong> - your private community platform for Indonesian expats in Malaysia.</p>
             
             <h2>Our Mission</h2>
-            <p>To help Indonesian expats in Malaysia find reliable services through community recommendations and reviews.</p>
+            <p>To help Indonesian expats in Malaysia find reliable services and share useful information through community recommendations.</p>
             
             <h2>How It Works</h2>
             <ul>
-                <li>Community members submit services they've used and trust</li>
-                <li>All submissions are reviewed to ensure quality and prevent spam</li>
-                <li>Approved services are published for everyone to access</li>
-                <li>Users can rate and review services (coming soon!)</li>
+                <li>👥 <strong>Private Community:</strong> Only for members of our WhatsApp group (600+ members)</li>
+                <li>📱 <strong>Monthly Code:</strong> Current month's code is shared in WhatsApp group to prevent spam</li>
+                <li>✅ <strong>Admin Review:</strong> All submissions are reviewed before publishing</li>
+                <li>📝 <strong>Share Services:</strong> Recommend trusted money changers, locksmiths, drivers, etc.</li>
+                <li>📰 <strong>Share Articles:</strong> Post visa updates, tips, and community news</li>
+                <li>⭐ <strong>Rate & Review:</strong> Share your experience with services</li>
+            </ul>
+            
+            <h2>Community Guidelines</h2>
+            <ul>
+                <li>Only share services you've personally used and trust</li>
+                <li>Be respectful and helpful in your reviews</li>
+                <li>Keep articles relevant to expat life in Malaysia</li>
+                <li>Monthly code is shared only in WhatsApp group - don't share publicly</li>
             </ul>
             
             <h2>Contact</h2>
-            <p>For questions or suggestions, please reach out to us at: <a href="mailto:admin@example.com">admin@example.com</a></p>
+            <p>For questions or suggestions, reach out in our WhatsApp group or contact admin.</p>
+            
+            <div class="community-stats">
+                <div>
+                    <div class="stat-value" id="serviceStat">0</div>
+                    <div class="stat-label">Services</div>
+                </div>
+                <div>
+                    <div class="stat-value" id="articleStat">0</div>
+                    <div class="stat-label">Articles</div>
+                </div>
+                <div>
+                    <div class="stat-value">600+</div>
+                    <div class="stat-label">Members</div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        const AIRTABLE_PAT = process.env.AIRTABLE_PAT;
+        const AIRTABLE_BASE_ID = 'appTSFC7saG9cxgHy';
+        
+        async function loadStats() {
+            try {
+                const services = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/Contacts?filterByFormula={Status}="Approved"`, {
+                    headers: { 'Authorization': `Bearer ${AIRTABLE_PAT}` }
+                });
+                const articles = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/Articles?filterByFormula={Status}="Approved"`, {
+                    headers: { 'Authorization': `Bearer ${AIRTABLE_PAT}` }
+                });
+                
+                const servicesData = await services.json();
+                const articlesData = await articles.json();
+                
+                document.getElementById('serviceStat').textContent = servicesData.records?.length || 0;
+                document.getElementById('articleStat').textContent = articlesData.records?.length || 0;
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', loadStats);
+    </script>
 </body>
 </html>

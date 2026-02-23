@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - IndoMY Community</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        nav {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-right: 1.5rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        h1 { color: #2c3e50; margin-bottom: 2rem; }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .code-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border: 2px solid #3498db;
+        }
+        .code-section h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .code-display {
+            background: #e9f2fa;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #3498db;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        .code-note {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 0.8rem 1.5rem;
+            background: #ecf0f1;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .tab.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        .items-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        @media (min-width: 768px) {
+            .items-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        .item-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #f39c12;
+        }
+        .item-card.pending { border-left-color: #f39c12; }
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.8rem;
+        }
+        .item-header h3 { font-size: 1.1rem; color: #2c3e50; }
+        .badge {
+            background: #f39c12;
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .item-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            margin-bottom: 0.8rem;
+        }
+        .item-content {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 1rem;
+            background: #f8f9fa;
+            padding: 0.8rem;
+            border-radius: 8px;
+        }
+        .item-actions {
+            display: flex;
+            gap: 0.8rem;
+        }
+        .approve-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .reject-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .view-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            padding: 1rem;
+        }
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .close {
+            float: right;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+        
+        .loading { text-align: center; padding: 2rem; color: #7f8c8d; }
+        .no-items { text-align: center; padding: 2rem; color: #7f8c8d; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div>
+            <a href="/">🏠 Home</a>
+            <a href="/admin.html">🔒 Admin</a>
+        </div>
+        <span style="background:#e74c3c; padding:0.2rem 0.8rem; border-radius:20px;">👑 Admin Only</span>
+    </nav>
+
+    <div class="container">
+        <div class="admin-header">
+            <h1>🔒 Admin Dashboard</h1>
+            <button class="approve-btn" onclick="refreshData()">🔄 Refresh</button>
+        </div>
+
+        <!-- Monthly Code Section -->
+        <div class="code-section">
+            <h3>
+                <span>🔑</span>
+                <span>Current Monthly Code</span>
+            </h3>
+            <p>Share this code in WhatsApp group each month. Change it monthly to prevent spam.</p>
+            <div class="code-display" id="currentCode">INDOMY0226</div>
+            <div style="display: flex; gap: 0.5rem;">
+                <select id="monthSelect" class="form-control" style="flex: 1; padding: 0.5rem;">
+                    <option value="0226">February 2026 (0226)</option>
+                    <option value="0326">March 2026 (0326)</option>
+                    <option value="0426">April 2026 (0426)</option>
+                    <option value="0526">May 2026 (0526)</option>
+                </select>
+                <button class="approve-btn" onclick="updateMonthlyCode()">Update Code</button>
+            </div>
+            <div class="code-note">Format: INDOMY + month + year (e.g., INDOMY0226 for February 2026)</div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('services')">📋 Pending Services</button>
+            <button class="tab" onclick="switchTab('reviews')">⭐ Pending Reviews</button>
+            <button class="tab" onclick="switchTab('articles')">📰 Pending Articles</button>
+        </div>
+
+        <!-- Items Container -->
+        <div id="itemsContainer" class="items-grid">
+            <div class="loading">Loading pending items...</div>
+        </div>
+    </div>
+
+    <!-- View Modal -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const AIRTABLE_PAT = process.env.AIRTABLE_PAT;
+        const AIRTABLE_BASE_ID = 'appTSFC7saG9cxgHy';
+        
+        let currentTab = 'services';
+        let pendingServices = [];
+        let pendingReviews = [];
+        let pendingArticles = [];
+        
+        // Monthly codes
+        let monthlyCodes = {
+            '0226': 'INDOMY0226',
+            '0326': 'INDOMY0326',
+            '0426': 'INDOMY0426',
+            '0526': 'INDOMY0526'
+        };
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAllPending();
+            // Set current month code
+            const now = new Date();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = String(now.getFullYear()).slice(-2);
+            document.getElementById('currentCode').textContent = `INDOMY${month}${year}`;
+        });
+        
+        async function loadAllPending() {
+            try {
+                await Promise.all([
+                    loadPendingServices(),
+                    loadPendingReviews(),
+                    loadPendingArticles()
+                ]);
+                displayCurrentTab();
+            } catch (error) {
+                console.error('Error loading:', error);
+            }
+        }
+        
+        async function loadPendingServices() {
+            const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/Contacts?filterByFormula={Status}="Pending"`, {
+                headers: { 'Authorization': `Bearer ${AIRTABLE_PAT}` }
+            });
+            const data = await response.json();
+            pendingServices = data.records || [];
+        }
+        
+        async function loadPendingReviews() {
+            const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/Reviews?filterByFormula={Status}="Pending"`, {
+                headers: { 'Authorization': `Bearer ${AIRTABLE_PAT}` }
+            });
+            const data = await response.json();
+            pendingReviews = data.records || [];
+        }
+        
+        async function loadPendingArticles() {
+            const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/Articles?filterByFormula={Status}="Pending"`, {
+                headers: { 'Authorization': `Bearer ${AIRTABLE_PAT}` }
+            });
+            const data = await response.json();
+            pendingArticles = data.records || [];
+        }
+        
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            displayCurrentTab();
+        }
+        
+        function displayCurrentTab() {
+            const container = document.getElementById('itemsContainer');
+            
+            if (currentTab === 'services') {
+                displayServices(container);
+            } else if (currentTab === 'reviews') {
+                displayReviews(container);
+            } else if (currentTab === 'articles') {
+                displayArticles(container);
+            }
+        }
+        
+        function displayServices(container) {
+            if (pendingServices.length === 0) {
+                container.innerHTML = '<div class="no-items">No pending services</div>';
+                return;
+            }
+            
+            let html = '';
+            pendingServices.forEach(record => {
+                const f = record.fields;
+                html += `
+                    <div class="item-card pending">
+                        <div class="item-header">
+                            <h3>${f.Name || 'Unnamed'}</h3>
+                            <span class="badge">${f.Category || 'Other'}</span>
+                        </div>
+                        <div class="item-meta">
+                            <span>👤 ${f.SubmittedBy || 'Unknown'}</span>
+                            <span>📅 ${f.CreatedAt || ''}</span>
+                        </div>
+                        <div class="item-content">
+                            <p><strong>Phone:</strong> ${f.Phone || '-'}</p>
+                            <p><strong>WhatsApp:</strong> ${f.WhatsApp || '-'}</p>
+                            <p><strong>Address:</strong> ${f.Address || '-'}</p>
+                            <p><strong>Description:</strong> ${f.Description || ''}</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="approve-btn" onclick="approveItem('Contacts', '${record.id}')">✓ Approve</button>
+                            <button class="reject-btn" onclick="rejectItem('Contacts', '${record.id}')">✗ Reject</button>
+                            <button class="view-btn" onclick="viewItem('service', '${record.id}')">👁️ View</button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+        
+        function displayReviews(container) {
+            if (pendingReviews.length === 0) {
+                container.innerHTML = '<div class="no-items">No pending reviews</div>';
+                return;
+            }
+            
+            let html = '';
+            pendingReviews.forEach(record => {
+                const f = record.fields;
+                html += `
+                    <div class="item-card pending">
+                        <div class="item-header">
+                            <h3>Review for Service</h3>
+                            <span class="badge">⭐ ${f.Rating || 0}/5</span>
+                        </div>
+                        <div class="item-meta">
+                            <span>👤 ${f.ReviewerName || 'Anonymous'}</span>
+                            <span>📅 ${f.CreatedAt || ''}</span>
+                        </div>
+                        <div class="item-content">
+                            <p><strong>Service ID:</strong> ${f.ServiceID || '-'}</p>
+                            <p><strong>Review:</strong> ${f.ReviewText || ''}</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="approve-btn" onclick="approveItem('Reviews', '${record.id}')">✓ Approve</button>
+                            <button class="reject-btn" onclick="rejectItem('Reviews', '${record.id}')">✗ Reject</button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+        
+        function displayArticles(container) {
+            if (pendingArticles.length === 0) {
+                container.innerHTML = '<div class="no-items">No pending articles</div>';
+                return;
+            }
+            
+            let html = '';
+            pendingArticles.forEach(record => {
+                const f = record.fields;
+                html += `
+                    <div class="item-card pending">
+                        <div class="item-header">
+                            <h3>${f.Title || 'Untitled'}</h3>
+                            <span class="badge">${f.Category || 'Other'}</span>
+                        </div>
+                        <div class="item-meta">
+                            <span>👤 ${f.Author || 'Unknown'}</span>
+                            <span>📅 ${f.CreatedAt || ''}</span>
+                        </div>
+                        <div class="item-content">
+                            <p><strong>Excerpt:</strong> ${f.Excerpt || ''}</p>
+                            <p><strong>Content:</strong> ${f.Content ? f.Content.substring(0, 100) + '...' : ''}</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="approve-btn" onclick="approveItem('Articles', '${record.id}')">✓ Approve</button>
+                            <button class="reject-btn" onclick="rejectItem('Articles', '${record.id}')">✗ Reject</button>
+                            <button class="view-btn" onclick="viewItem('article', '${record.id}')">👁️ Read</button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+        
+        async function approveItem(table, recordId) {
+            if (!confirm('Approve this item?')) return;
+            
+            try {
+                const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${table}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${AIRTABLE_PAT}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        records: [{
+                            id: recordId,
+                            fields: { Status: 'Approved' }
+                        }]
+                    })
+                });
+                
+                if (response.ok) {
+                    alert('✅ Approved!');
+                    loadAllPending();
+                } else {
+                    alert('❌ Failed to approve');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Error');
+            }
+        }
+        
+        async function rejectItem(table, recordId) {
+            if (!confirm('Reject this item?')) return;
+            
+            try {
+                const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${table}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${AIRTABLE_PAT}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        records: [{
+                            id: recordId,
+                            fields: { Status: 'Rejected' }
+                        }]
+                    })
+                });
+                
+                if (response.ok) {
+                    alert('✅ Rejected');
+                    loadAllPending();
+                } else {
+                    alert('❌ Failed to reject');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Error');
+            }
+        }
+        
+        function viewItem(type, id) {
+            const modal = document.getElementById('viewModal');
+            const content = document.getElementById('modalContent');
+            
+            if (type === 'service') {
+                const item = pendingServices.find(s => s.id === id);
+                if (item) {
+                    content.innerHTML = `
+                        <h2>${item.fields.Name}</h2>
+                        <p><strong>Category:</strong> ${item.fields.Category}</p>
+                        <p><strong>Phone:</strong> ${item.fields.Phone}</p>
+                        <p><strong>WhatsApp:</strong> ${item.fields.WhatsApp || '-'}</p>
+                        <p><strong>Address:</strong> ${item.fields.Address || '-'}</p>
+                        <p><strong>Description:</strong> ${item.fields.Description}</p>
+                        <p><strong>Submitted By:</strong> ${item.fields.SubmittedBy}</p>
+                        <p><strong>Date:</strong> ${item.fields.CreatedAt}</p>
+                    `;
+                }
+            } else if (type === 'article') {
+                const item = pendingArticles.find(a => a.id === id);
+                if (item) {
+                    content.innerHTML = `
+                        <h2>${item.fields.Title}</h2>
+                        <p><strong>Category:</strong> ${item.fields.Category}</p>
+                        <p><strong>Author:</strong> ${item.fields.Author}</p>
+                        <p><strong>Date:</strong> ${item.fields.CreatedAt}</p>
+                        <hr>
+                        <p><strong>Content:</strong></p>
+                        <p>${item.fields.Content.replace(/\n/g, '<br>')}</p>
+                    `;
+                }
+            }
+            
+            modal.style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('viewModal').style.display = 'none';
+        }
+        
+        function updateMonthlyCode() {
+            const month = document.getElementById('monthSelect').value;
+            const newCode = `INDOMY${month}`;
+            document.getElementById('currentCode').textContent = newCode;
+            alert(`✅ Monthly code updated to ${newCode}\nShare this in WhatsApp group.`);
+            
+            // In a real implementation, you'd save this to Airtable Settings table
+        }
+        
+        function refreshData() {
+            loadAllPending();
+        }
+        
+        window.onclick = function(event) {
+            const modal = document.getElementById('viewModal');
+            if (event.target === modal) closeModal();
+        }
+    </script>
+</body>
+</html>

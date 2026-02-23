@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Indonesian Expats Malaysia - Community Services</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>IndoMY Community - Indonesian Expats Malaysia</title>
     <style>
-        /* Same CSS as before - no changes needed */
         * {
             margin: 0;
             padding: 0;
@@ -13,231 +12,926 @@
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            line-height: 1.6;
+            line-height: 1.5;
             color: #333;
-            background-color: #f5f5f5;
+            background-color: #f8f9fa;
         }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        @media (min-width: 768px) {
+            .container { padding: 2rem; }
+        }
+        
+        /* Navigation */
         nav {
             background-color: #2c3e50;
             color: white;
-            padding: 1rem;
+            padding: 0.8rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
         nav a {
             color: white;
             text-decoration: none;
-            margin-right: 1.5rem;
+            font-size: 0.9rem;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
+        .community-badge {
+            background-color: #e74c3c;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
+        
+        /* Hero */
         .hero {
-            background-color: #3498db;
+            background: linear-gradient(135deg, #3498db, #2980b9);
             color: white;
-            padding: 3rem 2rem;
+            padding: 2rem 1rem;
             text-align: center;
-            border-radius: 10px;
+            border-radius: 16px;
             margin-bottom: 2rem;
         }
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+        .hero h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .hero p { font-size: 1rem; opacity: 0.9; margin-bottom: 1.5rem; }
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
         }
+        .stat { text-align: center; }
+        .stat-number { font-size: 1.5rem; font-weight: bold; }
+        .stat-label { font-size: 0.8rem; opacity: 0.8; }
+        
+        /* Buttons */
         .btn {
             display: inline-block;
             background-color: #e74c3c;
             color: white;
-            padding: 0.8rem 2rem;
+            padding: 0.6rem 1.5rem;
             text-decoration: none;
-            border-radius: 5px;
-            margin-top: 1rem;
+            border-radius: 8px;
             border: none;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.9rem;
+            font-weight: 500;
         }
-        .btn:hover {
-            background-color: #c0392b;
+        .btn-small {
+            padding: 0.4rem 1rem;
+            font-size: 0.8rem;
+            background-color: #3498db;
         }
-        .categories {
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+            margin-left: 0.5rem;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        /* Community Notice */
+        .community-notice {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 0.8rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Articles Section */
+        .articles-section { margin-bottom: 2.5rem; }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .section-header h2 {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .featured-article {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+        }
+        .featured-tag {
+            background: rgba(255,255,255,0.2);
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        .featured-article h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+        .article-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .articles-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: 1fr;
             gap: 1rem;
             margin-bottom: 2rem;
         }
-        .category-card {
+        @media (min-width: 640px) {
+            .articles-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        .article-card {
             background: white;
-            padding: 1.5rem;
-            text-align: center;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 1.2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
             cursor: pointer;
-            transition: transform 0.3s;
         }
-        .category-card:hover {
-            transform: translateY(-5px);
-        }
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-        .service-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .service-card h3 {
-            color: #2c3e50;
+        .article-category {
+            color: #3498db;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
             margin-bottom: 0.5rem;
         }
-        .service-category {
-            display: inline-block;
-            background-color: #3498db;
+        .article-card h4 { font-size: 1rem; margin-bottom: 0.5rem; color: #2c3e50; }
+        
+        /* Fixed line-clamp with full cross-browser support */
+        .article-excerpt {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-bottom: 0.8rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            /* Standard property for future compatibility */
+            line-clamp: 2;
+            /* Fallback for older browsers */
+            max-height: 2.6em; /* Approx 2 lines at 1.3em line-height */
+        }
+        
+        .article-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #95a5a6;
+        }
+        
+        /* Categories */
+        .categories-section { margin-bottom: 2rem; }
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            gap: 0.6rem;
+            margin-top: 0.5rem;
+        }
+        .category-card {
+            background: white;
+            padding: 0.8rem 0.3rem;
+            text-align: center;
+            border-radius: 10px;
+            border: 1px solid #eee;
+            cursor: pointer;
+        }
+        .category-card.active {
+            background: #3498db;
+            border-color: #3498db;
             color: white;
-            padding: 0.2rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            margin-bottom: 1rem;
+        }
+        .category-card.active h3,
+        .category-card.active small { color: white; }
+        .category-card h3 { font-size: 0.8rem; font-weight: 600; color: #2c3e50; margin-bottom: 0.2rem; }
+        .category-card small { font-size: 0.6rem; color: #95a5a6; }
+        
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+        }
+        .clear-filter { color: #3498db; cursor: pointer; }
+        
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        @media (min-width: 640px) {
+            .services-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        .service-card {
+            background: white;
+            padding: 1.2rem;
+            border-radius: 12px;
+            border: 1px solid #eee;
+        }
+        .service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+        .service-header h3 { font-size: 1rem; color: #2c3e50; }
+        .service-category {
+            background: #e9f2fa;
+            color: #3498db;
+            padding: 0.2rem 0.6rem;
+            border-radius: 16px;
+            font-size: 0.65rem;
+            font-weight: 600;
         }
         .rating {
             color: #f39c12;
             margin: 0.5rem 0;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
+        .rating-number { color: #95a5a6; font-size: 0.75rem; }
+        
+        /* Fixed line-clamp for service descriptions */
+        .service-description {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-bottom: 0.8rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            /* Standard property for future compatibility */
+            line-clamp: 2;
+            /* Fallback for older browsers */
+            max-height: 2.6em;
+        }
+        
         .contact-info {
+            margin: 0.8rem 0;
+            padding: 0.8rem 0;
+            border-top: 1px dashed #eee;
+            border-bottom: 1px dashed #eee;
+            font-size: 0.8rem;
+        }
+        .contact-info p { margin: 0.3rem 0; display: flex; align-items: center; gap: 0.5rem; }
+        .contact-info a { color: #3498db; text-decoration: none; }
+        
+        .review-actions {
+            display: flex;
+            gap: 0.8rem;
             margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid #eee;
         }
-        .contact-info p {
-            margin: 0.3rem 0;
+        .review-btn {
+            flex: 1;
+            background: #f39c12;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
         }
-        .loading {
+        .view-reviews-btn {
+            flex: 1;
+            background: #ecf0f1;
+            color: #2c3e50;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        
+        .reviews-section { margin-top: 1rem; display: none; }
+        .reviews-section.show { display: block; }
+        .review {
+            background: #f8f9fa;
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+        }
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.3rem;
+        }
+        .reviewer-name { font-weight: 600; color: #2c3e50; }
+        .review-rating { color: #f39c12; }
+        .review-date { font-size: 0.65rem; color: #95a5a6; margin-top: 0.3rem; }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            padding: 1rem;
+        }
+        .modal-content {
+            background: white;
+            margin: 20% auto;
+            padding: 1.5rem;
+            border-radius: 16px;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .close {
+            float: right;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #95a5a6;
+        }
+        .service-info {
+            background: #f8f9fa;
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+            border-left: 3px solid #3498db;
+        }
+        
+        /* Form elements */
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        textarea { min-height: 100px; resize: vertical; }
+        
+        .alert {
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+            font-size: 0.85rem;
+        }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        
+        .loading { text-align: center; padding: 2rem; color: #95a5a6; }
+        .no-items {
             text-align: center;
             padding: 2rem;
-            font-size: 1.2rem;
+            background: white;
+            border-radius: 12px;
             color: #7f8c8d;
+            grid-column: 1 / -1;
+        }
+        
+        /* Star Rating */
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            margin: 1rem 0;
+        }
+        .star-rating input { display: none; }
+        .star-rating label {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+            padding: 0 0.2rem;
+        }
+        .star-rating label:hover,
+        .star-rating label:hover ~ label,
+        .star-rating input:checked ~ label {
+            color: #f39c12;
         }
     </style>
 </head>
 <body>
     <nav>
-        <div class="container">
-            <a href="/">Home</a>
-            <a href="/submit.html">Submit Service</a>
-            <a href="/about.html">About</a>
+        <div class="nav-links">
+            <a href="/">🏠 Home</a>
+            <a href="/submit.html">➕ Add Service</a>
+            <a href="/submit-article.html">📝 Share Article</a>
+            <a href="/about.html">ℹ️ About</a>
+            <a href="/admin.html">🔒 Admin</a>
         </div>
+        <span class="community-badge">👥 600+ Members</span>
     </nav>
 
     <div class="container">
+        <div class="community-notice">
+            <span>🔒</span>
+            <span><strong>Private Community:</strong> For Indonesian Expats Malaysia WhatsApp group members only. Monthly code required for submissions.</span>
+        </div>
+
         <div class="hero">
-            <h1>Indonesian Expats Malaysia</h1>
-            <p>Find trusted services recommended by our community</p>
-            <a href="/submit.html" class="btn">Submit a Service</a>
+            <h1>🇲🇾 IndoMY Community</h1>
+            <p>Trusted services & updates shared by our WhatsApp group</p>
+            <div class="action-buttons">
+                <a href="/submit.html" class="btn">Share Service</a>
+                <a href="/submit-article.html" class="btn btn-outline">Write Article</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-number" id="serviceCount">0</div>
+                    <div class="stat-label">Services</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="articleCount">0</div>
+                    <div class="stat-label">Articles</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">600+</div>
+                    <div class="stat-label">Members</div>
+                </div>
+            </div>
         </div>
 
-        <h2>Browse by Category</h2>
-        <div class="categories" id="categories">
-            <!-- Categories will be loaded here -->
+        <!-- ARTICLES SECTION -->
+        <div class="articles-section">
+            <div class="section-header">
+                <h2><span>📰</span> <span>Community Updates</span></h2>
+                <a href="#" class="view-all" onclick="showAllArticles(); return false;">View All →</a>
+            </div>
+            <div id="featuredArticleContainer"></div>
+            <div id="articlesContainer" class="articles-grid"></div>
         </div>
 
-        <h2>Latest Approved Services</h2>
-        <div id="services-container">
-            <div class="loading">Loading services...</div>
+        <!-- SERVICES SECTION -->
+        <div class="categories-section">
+            <h2>Browse Services by Category</h2>
+            <div class="categories-grid" id="categories"></div>
+        </div>
+
+        <div class="filter-bar" id="filterBar" style="display: none;">
+            <span>Showing: <strong id="activeCategory"></strong></span>
+            <span class="clear-filter" onclick="clearCategoryFilter()">Clear filter</span>
+        </div>
+
+        <div id="servicesContainer" class="services-grid"></div>
+    </div>
+
+    <!-- Article Modal -->
+    <div id="articleModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeArticleModal()">&times;</span>
+            <div id="articleModalContent"></div>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div id="reviewModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeReviewModal()">&times;</span>
+            <h3 id="modalTitle">Write a Review</h3>
+            <div id="modalServiceInfo" class="service-info"></div>
+            
+            <form id="reviewForm">
+                <input type="hidden" id="reviewServiceId">
+                
+                <div class="form-group">
+                    <label>Your Rating *</label>
+                    <div class="star-rating">
+                        <input type="radio" name="rating" id="star5" value="5"><label for="star5">★</label>
+                        <input type="radio" name="rating" id="star4" value="4"><label for="star4">★</label>
+                        <input type="radio" name="rating" id="star3" value="3"><label for="star3">★</label>
+                        <input type="radio" name="rating" id="star2" value="2"><label for="star2">★</label>
+                        <input type="radio" name="rating" id="star1" value="1" required><label for="star1">★</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="reviewText">Your Review *</label>
+                    <textarea id="reviewText" required placeholder="Share your experience..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="reviewerName">Your Name *</label>
+                    <input type="text" id="reviewerName" required placeholder="e.g., Budi">
+                </div>
+
+                <div class="form-group">
+                    <label for="reviewCode">Monthly Code *</label>
+                    <input type="text" id="reviewCode" required placeholder="Check WhatsApp group">
+                    <small style="color: #7f8c8d;">Current month's code from group admin</small>
+                </div>
+
+                <button type="submit" class="btn" style="width: 100%;">Submit Review</button>
+            </form>
         </div>
     </div>
 
     <script>
-        // Your Airtable credentials - REPLACE THESE WITH YOUR ACTUAL VALUES
-        const AIRTABLE_PAT = 'patmyW5HrosIfQD5p.53764b31cd625c84cab831c2c237128331220028b544cfe3c5ef83b21ce560f1';  // Starts with 'pat'
-        const AIRTABLE_BASE_ID = 'appTSFC7saG9cxgHy';  // Starts with 'app'
-        const AIRTABLE_TABLE_NAME = 'Contacts';
+        // This will be replaced by Vercel environment variable
+        const AIRTABLE_PAT = process.env.AIRTABLE_PAT;
+        const AIRTABLE_BASE_ID = 'appTSFC7saG9cxgHy';
+        const CONTACTS_TABLE = 'Contacts';
+        const REVIEWS_TABLE = 'Reviews';
+        const ARTICLES_TABLE = 'Articles';
 
-        // Load services when page loads
+        // Monthly codes - update these at the beginning of each month
+        const VALID_CODES = ['INDOMY0226', 'INDOMY0326', 'INDOMY0426']; // Feb, Mar, Apr 2026
+
+        let currentCategory = null;
+        let allServices = [];
+        let allReviews = {};
+        let allArticles = [];
+
         document.addEventListener('DOMContentLoaded', function() {
-            loadServices();
-            loadCategories();
+            loadAllData();
         });
 
-        async function loadServices() {
+        async function loadAllData() {
             try {
-                const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}?filterByFormula={Status}="Approved"`, {
-                    headers: {
-                        'Authorization': `Bearer ${AIRTABLE_PAT}`
-                    }
-                });
-                const data = await response.json();
-                displayServices(data.records);
+                await Promise.all([
+                    loadServices(),
+                    loadAllReviews(),
+                    loadArticles()
+                ]);
             } catch (error) {
-                console.error('Error loading services:', error);
-                document.getElementById('services-container').innerHTML = '<p>Error loading services. Please try again later.</p>';
+                console.error('Error loading data:', error);
+                showErrorMessage();
             }
         }
 
-        function displayServices(records) {
-            const container = document.getElementById('services-container');
-            
-            if (records.length === 0) {
-                container.innerHTML = '<p>No services available yet.</p>';
+        function showErrorMessage() {
+            const container = document.getElementById('servicesContainer');
+            container.innerHTML = '<div class="no-items"><p>⚠️ Unable to load data. Please refresh the page or try again later.</p></div>';
+        }
+
+        // Load Articles
+        async function loadArticles() {
+            try {
+                const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${ARTICLES_TABLE}?filterByFormula={Status}="Approved"`, {
+                    headers: { 'Authorization': `Bearer ${AIRTABLE_PAT}` }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                allArticles = data.records || [];
+                displayArticles();
+                document.getElementById('articleCount').textContent = allArticles.length;
+            } catch (error) {
+                console.error('Error loading articles:', error);
+            }
+        }
+
+        function displayArticles() {
+            if (allArticles.length === 0) {
+                document.getElementById('articlesContainer').innerHTML = '<div class="no-items"><p>No articles yet. Be the first to share!</p></div>';
+                document.getElementById('featuredArticleContainer').innerHTML = '';
                 return;
             }
 
-            let html = '<div class="services-grid">';
-            records.forEach(record => {
-                const fields = record.fields;
+            const sorted = [...allArticles].sort((a, b) => new Date(b.fields.CreatedAt) - new Date(a.fields.CreatedAt));
+            const featured = sorted[0];
+            
+            document.getElementById('featuredArticleContainer').innerHTML = `
+                <div class="featured-article" onclick="openArticleModal('${featured.id}')">
+                    <span class="featured-tag">📌 LATEST</span>
+                    <h3>${escapeHtml(featured.fields.Title || 'Untitled')}</h3>
+                    <p>${escapeHtml(featured.fields.Excerpt || (featured.fields.Content || '').substring(0, 100))}...</p>
+                    <div class="article-meta">
+                        <span>👤 ${escapeHtml(featured.fields.Author || 'Member')}</span>
+                        <span>📅 ${new Date(featured.fields.CreatedAt).toLocaleDateString()}</span>
+                    </div>
+                </div>
+            `;
+
+            const remaining = sorted.slice(1, 4);
+            let html = '';
+            remaining.forEach(article => {
                 html += `
-                    <div class="service-card">
-                        <h3>${fields.Name || 'Unnamed'}</h3>
-                        <span class="service-category">${fields.Category || 'Other'}</span>
-                        <div class="rating">${getRatingStars(fields.Rating || 0)}</div>
-                        <p>${fields.Description || 'No description provided.'}</p>
-                        <div class="contact-info">
-                            ${fields.Phone ? `<p>📞 ${fields.Phone}</p>` : ''}
-                            ${fields.WhatsApp ? `<p>💬 WhatsApp: ${fields.WhatsApp}</p>` : ''}
-                            ${fields.Address ? `<p>📍 ${fields.Address}</p>` : ''}
+                    <div class="article-card" onclick="openArticleModal('${article.id}')">
+                        <div class="article-category">${escapeHtml(article.fields.Category || 'Update')}</div>
+                        <h4>${escapeHtml(article.fields.Title || 'Untitled')}</h4>
+                        <div class="article-excerpt">${escapeHtml(article.fields.Excerpt || (article.fields.Content || '').substring(0, 80))}...</div>
+                        <div class="article-footer">
+                            <span>👤 ${escapeHtml(article.fields.Author || 'Member')}</span>
+                            <span>📅 ${new Date(article.fields.CreatedAt).toLocaleDateString()}</span>
                         </div>
                     </div>
                 `;
             });
-            html += '</div>';
-            container.innerHTML = html;
+            document.getElementById('articlesContainer').innerHTML = html;
         }
 
-        function loadCategories() {
-            const categories = [
-                'Money Changer', 'Locksmith', 'Driver', 'Car Rental', 
-                'Restaurant', 'Grocery', 'Travel Agent', 'Lawyer', 
-                'Doctor', 'Contractor'
-            ];
+        // Load Services
+        async function loadServices() {
+            try {
+                const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${CONTACTS_TABLE}?filterByFormula={Status}="Approved"`, {
+                    headers: { 'Authorization': `Bearer ${AIRTABLE_PAT}` }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                allServices = data.records || [];
+                displayServices();
+                loadCategories();
+                document.getElementById('serviceCount').textContent = allServices.length;
+            } catch (error) {
+                console.error('Error loading services:', error);
+            }
+        }
+
+        async function loadAllReviews() {
+            try {
+                const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${REVIEWS_TABLE}?filterByFormula={Status}="Approved"`, {
+                    headers: { 'Authorization': `Bearer ${AIRTABLE_PAT}` }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                allReviews = {};
+                (data.records || []).forEach(record => {
+                    const serviceId = record.fields.ServiceID;
+                    if (!allReviews[serviceId]) allReviews[serviceId] = [];
+                    allReviews[serviceId].push(record.fields);
+                });
+                displayServices();
+            } catch (error) {
+                console.error('Error loading reviews:', error);
+            }
+        }
+
+        function displayServices() {
+            const container = document.getElementById('servicesContainer');
             
-            const container = document.getElementById('categories');
+            let servicesToShow = allServices;
+            if (currentCategory) {
+                servicesToShow = allServices.filter(s => s.fields.Category === currentCategory);
+            }
+            
+            if (servicesToShow.length === 0) {
+                container.innerHTML = '<div class="no-items"><p>No services available.</p></div>';
+                return;
+            }
+
+            const serviceRatings = {};
+            Object.keys(allReviews).forEach(serviceId => {
+                const reviews = allReviews[serviceId];
+                const avg = reviews.reduce((sum, r) => sum + (r.Rating || 0), 0) / reviews.length;
+                serviceRatings[serviceId] = { average: avg, count: reviews.length };
+            });
+
             let html = '';
-            categories.forEach(category => {
+            servicesToShow.forEach(record => {
+                const fields = record.fields;
+                const ratings = serviceRatings[record.id] || { average: 0, count: 0 };
+                const serviceReviews = allReviews[record.id] || [];
+                
                 html += `
-                    <div class="category-card" onclick="filterByCategory('${category}')">
-                        <h3>${category}</h3>
+                    <div class="service-card">
+                        <div class="service-header">
+                            <h3>${escapeHtml(fields.Name || 'Unnamed')}</h3>
+                            <span class="service-category">${escapeHtml(fields.Category || 'Other')}</span>
+                        </div>
+                        <div class="rating">
+                            ${getRatingStars(ratings.average)}
+                            <span class="rating-number">(${ratings.count} reviews)</span>
+                        </div>
+                        <div class="service-description">${escapeHtml(fields.Description || '')}</div>
+                        <div class="contact-info">
+                            ${fields.Phone ? `<p>📞 <a href="tel:${escapeHtml(fields.Phone)}">${escapeHtml(fields.Phone)}</a></p>` : ''}
+                            ${fields.WhatsApp ? `<p>💬 <a href="https://wa.me/${fields.WhatsApp.replace(/\D/g, '')}">${escapeHtml(fields.WhatsApp)}</a></p>` : ''}
+                            ${fields.Address ? `<p>📍 ${escapeHtml(fields.Address)}</p>` : ''}
+                        </div>
+                        <div class="review-actions">
+                            <button class="review-btn" onclick="openReviewModal('${record.id}', '${escapeHtml(fields.Name || 'Unnamed').replace(/'/g, "\\'")}')">⭐ Write Review</button>
+                            <button class="view-reviews-btn" onclick="toggleReviews('${record.id}')">💬 ${serviceReviews.length} Reviews</button>
+                        </div>
+                        <div class="reviews-section" id="reviews-${record.id}">
+                            ${serviceReviews.slice(0, 2).map(review => `
+                                <div class="review">
+                                    <div class="review-header">
+                                        <span class="reviewer-name">${escapeHtml(review.ReviewerName || 'Anonymous')}</span>
+                                        <span class="review-rating">${getRatingStars(review.Rating || 0)}</span>
+                                    </div>
+                                    <div>${escapeHtml(review.ReviewText || '')}</div>
+                                    <div class="review-date">${new Date(review.CreatedAt).toLocaleDateString()}</div>
+                                </div>
+                            `).join('')}
+                        </div>
                     </div>
                 `;
             });
             container.innerHTML = html;
         }
 
-        function getRatingStars(rating) {
-            const fullStars = Math.floor(rating);
-            const halfStar = rating % 1 >= 0.5;
-            let stars = '';
-            for (let i = 0; i < fullStars; i++) stars += '★';
-            if (halfStar) stars += '½';
-            const emptyStars = 5 - Math.ceil(rating);
-            for (let i = 0; i < emptyStars; i++) stars += '☆';
-            return stars;
+        function loadCategories() {
+            const categories = ['Money Changer', 'Locksmith', 'Driver', 'Car Rental', 'Restaurant', 'Grocery', 'Travel Agent', 'Lawyer', 'Doctor', 'Contractor'];
+            let html = '';
+            categories.forEach(category => {
+                const count = allServices.filter(s => s.fields.Category === category).length;
+                html += `
+                    <div class="category-card ${currentCategory === category ? 'active' : ''}" onclick="filterByCategory('${category}')">
+                        <h3>${category}</h3>
+                        <small>${count}</small>
+                    </div>
+                `;
+            });
+            document.getElementById('categories').innerHTML = html;
         }
 
         function filterByCategory(category) {
-            // This will be implemented later
-            alert(`Filtering by ${category} - Coming soon!`);
+            currentCategory = category;
+            document.getElementById('filterBar').style.display = 'flex';
+            document.getElementById('activeCategory').textContent = category;
+            displayServices();
+            loadCategories();
+        }
+
+        function clearCategoryFilter() {
+            currentCategory = null;
+            document.getElementById('filterBar').style.display = 'none';
+            displayServices();
+            loadCategories();
+        }
+
+        function toggleReviews(serviceId) {
+            document.getElementById(`reviews-${serviceId}`).classList.toggle('show');
+        }
+
+        function getRatingStars(rating) {
+            const full = Math.floor(rating);
+            const half = rating % 1 >= 0.5;
+            let stars = '';
+            for (let i = 0; i < full; i++) stars += '★';
+            if (half) stars += '½';
+            for (let i = 0; i < 5 - Math.ceil(rating); i++) stars += '☆';
+            return stars;
+        }
+
+        // Simple escape function to prevent XSS
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Article Modal
+        function openArticleModal(articleId) {
+            const article = allArticles.find(a => a.id === articleId);
+            if (!article) return;
+            
+            const content = (article.fields.Content || '').replace(/\n/g, '<br>');
+            document.getElementById('articleModalContent').innerHTML = `
+                <h2 style="margin-bottom:1rem;">${escapeHtml(article.fields.Title || 'Untitled')}</h2>
+                <div style="background:#f8f9fa; padding:0.8rem; border-radius:8px; margin-bottom:1rem; font-size:0.85rem;">
+                    <span>👤 ${escapeHtml(article.fields.Author || 'Member')}</span> • 
+                    <span>📅 ${new Date(article.fields.CreatedAt).toLocaleDateString()}</span> • 
+                    <span>🏷️ ${escapeHtml(article.fields.Category || 'Update')}</span>
+                </div>
+                <div>${content}</div>
+            `;
+            document.getElementById('articleModal').style.display = 'block';
+        }
+
+        function closeArticleModal() {
+            document.getElementById('articleModal').style.display = 'none';
+        }
+
+        function showAllArticles() {
+            alert('📚 All articles view coming soon!');
+        }
+
+        // Review Modal
+        function openReviewModal(serviceId, serviceName) {
+            document.getElementById('reviewServiceId').value = serviceId;
+            document.getElementById('modalServiceInfo').innerHTML = `<strong>${escapeHtml(serviceName)}</strong><br><small>Share your experience</small>`;
+            document.getElementById('reviewModal').style.display = 'block';
+        }
+
+        function closeReviewModal() {
+            document.getElementById('reviewModal').style.display = 'none';
+            document.getElementById('reviewForm').reset();
+        }
+
+        // Submit Review
+        document.getElementById('reviewForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const code = document.getElementById('reviewCode').value;
+            
+            if (!VALID_CODES.includes(code)) {
+                alert('❌ Invalid monthly code. Check WhatsApp group for current code.');
+                return;
+            }
+
+            const serviceId = document.getElementById('reviewServiceId').value;
+            const rating = document.querySelector('input[name="rating"]:checked')?.value;
+            const reviewText = document.getElementById('reviewText').value;
+            const reviewerName = document.getElementById('reviewerName').value;
+
+            if (!rating) {
+                alert('Please select a rating');
+                return;
+            }
+
+            const data = {
+                records: [{
+                    fields: {
+                        ServiceID: serviceId,
+                        Rating: parseFloat(rating),
+                        ReviewText: reviewText,
+                        ReviewerName: reviewerName,
+                        Status: 'Pending',
+                        CreatedAt: new Date().toISOString().split('T')[0]
+                    }
+                }]
+            };
+
+            try {
+                const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${REVIEWS_TABLE}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${AIRTABLE_PAT}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('✅ Thank you! Review submitted for approval.');
+                    closeReviewModal();
+                } else {
+                    const error = await response.json();
+                    console.error('Airtable error:', error);
+                    alert('❌ Submission failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Network error. Please check your connection.');
+            }
+        });
+
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('reviewModal')) closeReviewModal();
+            if (event.target === document.getElementById('articleModal')) closeArticleModal();
         }
     </script>
 </body>
