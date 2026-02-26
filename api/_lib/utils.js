@@ -1,68 +1,68 @@
-const crypto = require("crypto");
+const crypto = require('crypto');
 
-function json(res, status, data, cors = true) {
-  if (cors) {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  }
+function json(res, status, data) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.statusCode = status;
-  res.setHeader("Content-Type", "application/json");
+  res.setHeader('Content-Type', 'application/json');
   res.end(JSON.stringify(data));
 }
 
 function ok(res, data) { json(res, 200, data); }
 function bad(res, msg) { json(res, 400, { error: msg }); }
-function server(res, msg) { json(res, 500, { error: msg || "Server error" }); }
 
 function getIP(req) {
-  return (
-    req.headers["x-forwarded-for"]?.toString().split(",")[0].trim() ||
-    req.headers["cf-connecting-ip"] ||
-    req.socket?.remoteAddress ||
-    "0.0.0.0"
-  );
+  return req.headers['x-forwarded-for']?.split(',')[0] || 
+         req.socket?.remoteAddress || '0.0.0.0';
 }
 
 function sha256(input) {
-  return crypto.createHash("sha256").update(input).digest("hex");
+  return crypto.createHash('sha256').update(input).digest('hex');
 }
 
-// Lightweight rate limit per IP + path (memory-only)
-const memoryHits = new Map();
-function rateLimit(req, res, limitPerMinute = 30) {
-  const key = `${getIP(req)}:${req.url}`;
+// Simple in-memory rate limiting
+const rateLimit = new Map();
+function checkRateLimit(ip, limit = 30) {
   const now = Date.now();
-  const arr = memoryHits.get(key)?.filter(ts => now - ts < 60_000) || [];
-  arr.push(now);
-  memoryHits.set(key, arr);
-  if (arr.length > limitPerMinute) return bad(res, "Too many requests. Please slow down.");
-  return true;
+  const windowMs = 60000; // 1 minute
+  
+  if (!rateLimit.has(ip)) {
+    rateLimit.set(ip, []);
+  }
+  
+  const timestamps = rateLimit.get(ip).filter(t => now - t < windowMs);
+  timestamps.push(now);
+  rateLimit.set(ip, timestamps);
+  
+  return timestamps.length <= limit;
 }
 
 async function verifyTurnstile(token) {
   const secret = process.env.TURNSTILE_SECRET;
-  if (!secret) return true; // soft bypass if not configured yet
+  if (!secret) return true;
+  
   try {
-    const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ secret, response: token })
+    const formData = new URLSearchParams();
+    formData.append('secret', secret);
+    formData.append('response', token);
+    
+    const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      body: formData
     });
-    const data = await verifyRes.json();
-    return !!data.success;
-  } catch (_) {
+    const data = await res.json();
+    return data.success;
+  } catch {
     return false;
   }
 }
 
-function slugify(text = "") {
-  return text
-    .toString()
-    .toLowerCase()
+function slugify(text) {
+  return text.toString().toLowerCase()
     .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
-module.exports = { ok, bad, server, getIP, sha256, rateLimit, verifyTurnstile, slugify };
+module.exports = { ok, bad, getIP, sha256, checkRateLimit, verifyTurnstile, slugify };

@@ -1,72 +1,71 @@
 const { list, create, retrieve } = require('./_lib/airtable');
-const { ok, bad, checkRateLimit, verifyTurnstile, slugify } = require('./_lib/utils');
+const { ok, bad, getIP, checkRateLimit, verifyTurnstile } = require('./_lib/utils');
 
 module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') return ok(res, { ok: true });
 
   try {
+    // GET services
     if (req.method === 'GET') {
       const url = new URL(req.url, `http://${req.headers.host}`);
-      const slug = url.searchParams.get('slug');
-      const featured = url.searchParams.get('featured');
+      const id = url.searchParams.get('id');
       const limit = url.searchParams.get('limit') || 200;
 
-      if (slug) {
-        const articles = await list('Articles', {
-          filterByFormula: `AND(Status='Approved',Slug='${slug}')`,
-          maxRecords: 1
-        });
-        return ok(res, { record: articles.records[0] || null });
+      if (id) {
+        const service = await retrieve('Services', id);
+        return ok(res, { record: service });
       }
 
-      if (featured) {
-        const featured = await list('Articles', {
-          filterByFormula: "AND(Status='Approved',Featured=1)",
-          maxRecords: 1
-        });
-        return ok(res, { record: featured.records[0] || null });
-      }
-
-      const articles = await list('Articles', {
+      const services = await list('Services', {
         filterByFormula: "Status='Approved'",
         maxRecords: limit,
         sort: [{ field: 'CreatedAt', direction: 'desc' }]
       });
 
-      return ok(res, { records: articles.records });
+      return ok(res, { records: services.records });
     }
 
+    // POST new service
     if (req.method === 'POST') {
+      const ip = getIP(req);
+      if (!checkRateLimit(ip, 10)) {
+        return bad(res, 'Terlalu banyak permintaan. Silakan tunggu.');
+      }
+
       const body = await new Promise((resolve) => {
         let data = '';
         req.on('data', chunk => data += chunk);
         req.on('end', () => resolve(JSON.parse(data || '{}')));
       });
 
+      // Verify Turnstile
       const valid = await verifyTurnstile(body.turnstileToken);
       if (!valid) return bad(res, 'Verifikasi bot gagal');
 
-      const { title, content, author, category, imageUrl } = body;
+      const { name, category, phone, whatsapp, area, address, description, submittedBy } = body;
 
-      if (!title || !content) {
-        return bad(res, 'Judul dan konten wajib diisi');
+      if (!name || !category || !phone || !description || !submittedBy) {
+        return bad(res, 'Semua field wajib harus diisi');
       }
 
       const record = {
         fields: {
-          Title: title,
-          Content: content,
-          Author: author || 'Anonymous',
-          Category: category || 'Umum',
-          ImageURL: imageUrl || '',
-          Slug: slugify(title),
+          Name: name,
+          Category: category,
+          Phone: phone,
+          WhatsApp: whatsapp || '',
+          Area: area || '',
+          Address: address || '',
+          Description: description,
+          SubmittedBy: submittedBy,
           Status: 'Pending',
-          Featured: false,
+          AverageRating: 0,
+          ReviewsCount: 0,
           CreatedAt: new Date().toISOString().split('T')[0]
         }
       };
 
-      const result = await create('Articles', [record]);
+      const result = await create('Services', [record]);
       return ok(res, { success: true, id: result.records[0].id });
     }
 
