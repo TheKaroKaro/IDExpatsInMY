@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tulis Artikel - IndoMY</title>
+    <style>
+        /* Same styles as submit-service.html */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        :root { --primary: #FF6B6B; --secondary: #4ECDC4; --dark: #2C3E50; }
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 2rem 0; }
+        .container { max-width: 600px; margin: 0 auto; padding: 0 20px; }
+        .form-card { background: white; border-radius: 20px; padding: 2rem; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+        h1 { color: var(--primary); }
+        .form-group { margin-bottom: 1.5rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+        .form-control { width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 10px; }
+        .btn { width: 100%; padding: 1rem; background: var(--primary); color: white; border: none; border-radius: 10px; cursor: pointer; }
+        .alert { padding: 1rem; border-radius: 10px; margin-bottom: 1rem; display: none; }
+        .alert-success { background: #d4edda; color: #155724; display: block; }
+        .alert-error { background: #f8d7da; color: #721c24; display: block; }
+    </style>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="form-card">
+            <h1>📝 Tulis Artikel</h1>
+            <p>Bagikan tips dan informasi bermanfaat</p>
+            
+            <div id="alert" class="alert"></div>
+            
+            <form id="articleForm">
+                <div class="form-group">
+                    <label>Judul Artikel *</label>
+                    <input type="text" id="title" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Konten *</label>
+                    <textarea id="content" class="form-control" rows="8" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Nama Penulis</label>
+                    <input type="text" id="author" class="form-control" placeholder="Anonymous">
+                </div>
+                
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <input type="text" id="category" class="form-control" placeholder="Contoh: Tips, Berita, Pengalaman">
+                </div>
+                
+                <div class="form-group">
+                    <label>URL Gambar (Opsional)</label>
+                    <input type="url" id="imageUrl" class="form-control" placeholder="https://...">
+                </div>
+                
+                <div class="form-group">
+                    <div class="cf-turnstile" data-sitekey="YOUR_TURNSTILE_SITE_KEY"></div>
+                </div>
+                
+                <button type="submit" class="btn">Kirim untuk Ditinjau</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('articleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const token = document.querySelector('[name="cf-turnstile-response"]')?.value;
+            
+            const formData = {
+                title: document.getElementById('title').value,
+                content: document.getElementById('content').value,
+                author: document.getElementById('author').value,
+                category: document.getElementById('category').value,
+                imageUrl: document.getElementById('imageUrl').value,
+                turnstileToken: token
+            };
+            
+            try {
+                const res = await fetch('/api/articles', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await res.json();
+                
+                if (res.ok) {
+                    showAlert('✅ Artikel berhasil dikirim! Menunggu persetujuan admin.', true);
+                    e.target.reset();
+                    if (window.turnstile) window.turnstile.reset();
+                } else {
+                    showAlert(data.error || 'Gagal mengirim artikel', false);
+                }
+            } catch (error) {
+                showAlert('Gagal mengirim artikel', false);
+            }
+        });
+        
+        function showAlert(message, isSuccess) {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.className = `alert ${isSuccess ? 'alert-success' : 'alert-error'}`;
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

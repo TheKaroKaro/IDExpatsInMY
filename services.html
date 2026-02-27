@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direktori Jasa - IndoMY</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        :root { --primary: #FF6B6B; --secondary: #4ECDC4; --dark: #2C3E50; --light: #f8f9fa; }
+        body { background: var(--light); color: var(--dark); line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Navigation (same as index) */
+        nav { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { text-decoration: none; color: var(--dark); font-weight: 500; }
+        .mobile-menu-btn { display: none; font-size: 1.5rem; cursor: pointer; }
+        
+        /* Page Header */
+        .page-header { background: linear-gradient(135deg, var(--primary), #FF8E8E); color: white; padding: 2rem 0; margin-bottom: 2rem; }
+        .page-header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        
+        /* Search & Filter */
+        .search-section { background: white; border-radius: 10px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .search-box { display: flex; gap: 1rem; margin-bottom: 1rem; }
+        .search-box input { flex: 1; padding: 0.8rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
+        .search-box button { padding: 0.8rem 1.5rem; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; }
+        .filter-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .filter-tag { padding: 0.5rem 1rem; background: var(--light); border: 1px solid #ddd; border-radius: 20px; cursor: pointer; transition: all 0.3s; }
+        .filter-tag:hover, .filter-tag.active { background: var(--primary); color: white; border-color: var(--primary); }
+        
+        /* Grid */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .service-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: all 0.3s; }
+        .service-card:hover { transform: translateY(-5px); box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .card-body { padding: 1.2rem; }
+        .card-category { color: var(--secondary); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.5rem; }
+        .card-title { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--dark); text-decoration: none; }
+        .stars { color: #FFD700; margin: 0.5rem 0; }
+        .card-meta { color: #666; font-size: 0.9rem; margin: 0.5rem 0; }
+        .btn { display: inline-block; padding: 0.5rem 1rem; background: var(--primary); color: white; text-decoration: none; border-radius: 5px; margin-top: 0.5rem; }
+        
+        /* Pagination */
+        .pagination { display: flex; justify-content: center; gap: 0.5rem; margin: 2rem 0; }
+        .page-btn { padding: 0.5rem 1rem; border: 1px solid #ddd; background: white; cursor: pointer; border-radius: 5px; }
+        .page-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        
+        .loading { text-align: center; padding: 3rem; color: #666; }
+        
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            .search-box { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">IndoMY</a>
+            <div class="nav-links" id="navLinks">
+                <a href="/services.html">Direktori</a>
+                <a href="/articles.html">Artikel</a>
+                <a href="/submit-service.html">Tambah Jasa</a>
+                <a href="/submit-article.html">Tulis Artikel</a>
+            </div>
+            <div class="mobile-menu-btn" onclick="document.getElementById('navLinks').classList.toggle('active')">☰</div>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <div class="container">
+            <h1>Direktori Jasa</h1>
+            <p>Temukan berbagai jasa terpercaya dari komunitas</p>
+        </div>
+    </div>
+
+    <main class="container">
+        <!-- Search & Filter -->
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Cari jasa atau nama...">
+                <button onclick="searchServices()">Cari</button>
+            </div>
+            <div class="filter-tags" id="categoryFilters">
+                <span class="filter-tag active" data-category="all">Semua</span>
+                <span class="filter-tag" data-category="Locksmith">🔑 Tukang Kunci</span>
+                <span class="filter-tag" data-category="Cleaner">🧹 Jasa Kebersihan</span>
+                <span class="filter-tag" data-category="Driver">🚗 Driver/Sopir</span>
+                <span class="filter-tag" data-category="Money Changer">💰 Money Changer</span>
+                <span class="filter-tag" data-category="Restaurant">🍜 Restoran</span>
+                <span class="filter-tag" data-category="Car Rental">🚙 Sewa Mobil</span>
+                <span class="filter-tag" data-category="Travel">✈️ Travel Agent</span>
+                <span class="filter-tag" data-category="Lawyer">⚖️ Pengacara</span>
+                <span class="filter-tag" data-category="Doctor">🏥 Dokter</span>
+                <span class="filter-tag" data-category="Contractor">🔨 Kontraktor</span>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div id="servicesContainer" class="services-grid">
+            <div class="loading">Memuat direktori...</div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination"></div>
+    </main>
+
+    <footer style="background: var(--dark); color: white; padding: 2rem 0; margin-top: 3rem;">
+        <div class="container" style="text-align: center;">
+            © 2024 IndoMY - Komunitas Indonesia di Malaysia
+        </div>
+    </footer>
+
+    <script>
+        let currentPage = 1;
+        let currentCategory = 'all';
+        let currentSearch = '';
+        const itemsPerPage = 12;
+
+        async function loadServices() {
+            const container = document.getElementById('servicesContainer');
+            container.innerHTML = '<div class="loading">Memuat...</div>';
+
+            try {
+                const res = await fetch('/api/services');
+                const data = await res.json();
+                
+                let services = data.records || [];
+                
+                // Filter by category
+                if (currentCategory !== 'all') {
+                    services = services.filter(s => s.fields.Category === currentCategory);
+                }
+                
+                // Filter by search
+                if (currentSearch) {
+                    const search = currentSearch.toLowerCase();
+                    services = services.filter(s => 
+                        s.fields.Name.toLowerCase().includes(search) ||
+                        s.fields.Description.toLowerCase().includes(search)
+                    );
+                }
+                
+                // Paginate
+                const totalPages = Math.ceil(services.length / itemsPerPage);
+                const start = (currentPage - 1) * itemsPerPage;
+                const paginatedServices = services.slice(start, start + itemsPerPage);
+                
+                if (paginatedServices.length === 0) {
+                    container.innerHTML = '<div class="loading">Tidak ada jasa ditemukan</div>';
+                } else {
+                    container.innerHTML = paginatedServices.map(s => {
+                        const f = s.fields;
+                        const stars = renderStars(f.AverageRating);
+                        return `
+                            <div class="service-card">
+                                <div class="card-body">
+                                    <div class="card-category">${f.Category}</div>
+                                    <h3 class="card-title">${f.Name}</h3>
+                                    <div class="stars">${stars} (${f.ReviewsCount || 0} ulasan)</div>
+                                    <p><small>📍 ${f.Area || 'Malaysia'}</small></p>
+                                    <p>${f.Description.substring(0, 120)}...</p>
+                                    <div class="card-meta">📞 ${f.Phone}</div>
+                                    <a href="/service-detail.html?id=${s.id}" class="btn">Lihat Detail</a>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+                
+                // Update pagination
+                renderPagination(totalPages);
+                
+            } catch (error) {
+                container.innerHTML = '<div class="loading">Gagal memuat data. Refresh halaman.</div>';
+            }
+        }
+
+        function renderStars(avg) {
+            if (!avg) return '☆☆☆☆☆';
+            const full = Math.floor(avg);
+            const half = avg - full >= 0.5 ? 1 : 0;
+            const empty = 5 - full - half;
+            return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);
+        }
+
+        function renderPagination(totalPages) {
+            if (totalPages <= 1) {
+                document.getElementById('pagination').innerHTML = '';
+                return;
+            }
+            
+            let html = '';
+            for (let i = 1; i <= totalPages; i++) {
+                html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+            }
+            document.getElementById('pagination').innerHTML = html;
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            loadServices();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function searchServices() {
+            currentSearch = document.getElementById('searchInput').value;
+            currentPage = 1;
+            loadServices();
+        }
+
+        // Category filter click handlers
+        document.querySelectorAll('.filter-tag').forEach(tag => {
+            tag.addEventListener('click', () => {
+                document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+                tag.classList.add('active');
+                currentCategory = tag.dataset.category;
+                currentPage = 1;
+                loadServices();
+            });
+        });
+
+        // Load on page load
+        loadServices();
+
+        // Enter key search
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchServices();
+        });
+    </script>
+</body>
+</html>
