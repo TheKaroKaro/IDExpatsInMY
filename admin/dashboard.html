@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - IndoMY</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">IndoMY Admin</a>
+            <div class="nav-links">
+                <a href="/">Lihat Situs</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div id="loginSection">
+            <div class="form-container" style="max-width: 400px;">
+                <h2>Admin Login</h2>
+                <p>Masuk dengan email yang terdaftar sebagai admin.</p>
+                
+                <div id="loginAlert" class="alert"></div>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Verifikasi Email</button>
+                </form>
+            </div>
+        </div>
+        
+        <div id="adminSection" style="display: none;">
+            <h1>Admin Dashboard</h1>
+            
+            <div class="admin-container">
+                <div class="admin-sidebar">
+                    <h3>Menu</h3>
+                    <ul class="admin-nav">
+                        <li><a href="#" onclick="showSection('pendingServices')" class="active">Pending Services</a></li>
+                        <li><a href="#" onclick="showSection('pendingArticles')">Pending Articles</a></li>
+                        <li><a href="#" onclick="showSection('approvedServices')">Approved Services</a></li>
+                        <li><a href="#" onclick="showSection('approvedArticles')">Approved Articles</a></li>
+                    </ul>
+                </div>
+                
+                <div class="admin-content">
+                    <div id="pendingServices" class="admin-section">
+                        <h2>Pending Services</h2>
+                        <div id="pendingServicesList">Loading...</div>
+                    </div>
+                    
+                    <div id="pendingArticles" class="admin-section" style="display: none;">
+                        <h2>Pending Articles</h2>
+                        <div id="pendingArticlesList">Loading...</div>
+                    </div>
+                    
+                    <div id="approvedServices" class="admin-section" style="display: none;">
+                        <h2>Approved Services</h2>
+                        <div id="approvedServicesList">Loading...</div>
+                    </div>
+                    
+                    <div id="approvedArticles" class="admin-section" style="display: none;">
+                        <h2>Approved Articles</h2>
+                        <div id="approvedArticlesList">Loading...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script>
+        let currentAdminEmail = null;
+        
+        // Check if user is admin on page load
+        async function checkAdmin(email) {
+            const isAdmin = await AdminAPI.isAdmin(email);
+            if (isAdmin) {
+                currentAdminEmail = email;
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('adminSection').style.display = 'block';
+                loadPendingServices();
+            } else {
+                showLoginAlert('Email tidak terdaftar sebagai admin', false);
+            }
+        }
+        
+        // Login form
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            checkAdmin(email);
+        });
+        
+        // Load pending services
+        async function loadPendingServices() {
+            const listEl = document.getElementById('pendingServicesList');
+            listEl.innerHTML = '<p class="loading">Loading...</p>';
+            
+            try {
+                const services = await AdminAPI.getPendingServices();
+                
+                if (services.length === 0) {
+                    listEl.innerHTML = '<p>Tidak ada pending services.</p>';
+                    return;
+                }
+                
+                listEl.innerHTML = services.map(service => `
+                    <div class="pending-item">
+                        <h3>${service.name}</h3>
+                        <p><strong>Kategori:</strong> ${service.category}</p>
+                        <p><strong>Telepon:</strong> ${service.phone}</p>
+                        <p><strong>Pengirim:</strong> ${service.submitted_by}</p>
+                        <p>${service.description.substring(0, 200)}...</p>
+                        <div class="pending-actions">
+                            <button class="btn btn-small btn-approve" onclick="approveService('${service.id}')">Setujui</button>
+                            <button class="btn btn-small btn-reject" onclick="rejectService('${service.id}')">Tolak</button>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                listEl.innerHTML = '<p>Error loading data.</p>';
+                console.error(error);
+            }
+        }
+        
+        // Load pending articles
+        async function loadPendingArticles() {
+            const listEl = document.getElementById('pendingArticlesList');
+            listEl.innerHTML = '<p class="loading">Loading...</p>';
+            
+            try {
+                const articles = await AdminAPI.getPendingArticles();
+                
+                if (articles.length === 0) {
+                    listEl.innerHTML = '<p>Tidak ada pending articles.</p>';
+                    return;
+                }
+                
+                listEl.innerHTML = articles.map(article => `
+                    <div class="pending-item">
+                        <h3>${article.title}</h3>
+                        <p><strong>Penulis:</strong> ${article.author}</p>
+                        <p><strong>Kategori:</strong> ${article.category}</p>
+                        <p>${article.content.substring(0, 200)}...</p>
+                        <div class="pending-actions">
+                            <button class="btn btn-small btn-approve" onclick="approveArticle('${article.id}')">Setujui</button>
+                            <button class="btn btn-small" onclick="setFeatured('${article.id}')">Jadikan Unggulan</button>
+                            <button class="btn btn-small btn-reject" onclick="rejectArticle('${article.id}')">Tolak</button>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                listEl.innerHTML = '<p>Error loading data.</p>';
+                console.error(error);
+            }
+        }
+        
+        // Approve service
+        async function approveService(id) {
+            try {
+                await AdminAPI.updateServiceStatus(id, 'approved');
+                loadPendingServices();
+                showAlert('Service approved!', true);
+            } catch (error) {
+                showAlert('Error approving service', false);
+            }
+        }
+        
+        // Reject service
+        async function rejectService(id) {
+            try {
+                await AdminAPI.updateServiceStatus(id, 'rejected');
+                loadPendingServices();
+                showAlert('Service rejected', true);
+            } catch (error) {
+                showAlert('Error rejecting service', false);
+            }
+        }
+        
+        // Approve article
+        async function approveArticle(id) {
+            try {
+                await AdminAPI.updateArticleStatus(id, 'approved');
+                loadPendingArticles();
+                showAlert('Article approved!', true);
+            } catch (error) {
+                showAlert('Error approving article', false);
+            }
+        }
+        
+        // Reject article
+        async function rejectArticle(id) {
+            try {
+                await AdminAPI.updateArticleStatus(id, 'rejected');
+                loadPendingArticles();
+                showAlert('Article rejected', true);
+            } catch (error) {
+                showAlert('Error rejecting article', false);
+            }
+        }
+        
+        // Set featured article
+        async function setFeatured(id) {
+            try {
+                await AdminAPI.setFeaturedArticle(id);
+                showAlert('Article set as featured!', true);
+            } catch (error) {
+                showAlert('Error setting featured', false);
+            }
+        }
+        
+        // Show different sections
+        function showSection(section) {
+            document.querySelectorAll('.admin-section').forEach(s => s.style.display = 'none');
+            document.getElementById(section).style.display = 'block';
+            
+            document.querySelectorAll('.admin-nav a').forEach(a => a.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Load data for section
+            if (section === 'pendingServices') loadPendingServices();
+            if (section === 'pendingArticles') loadPendingArticles();
+        }
+        
+        function showLoginAlert(message, isSuccess) {
+            const alert = document.getElementById('loginAlert');
+            alert.textContent = message;
+            alert.className = `alert ${isSuccess ? 'alert-success' : 'alert-error'}`;
+        }
+        
+        function showAlert(message, isSuccess) {
+            // Simple alert for admin actions
+            alert(message);
+        }
+    </script>
+</body>
+</html>

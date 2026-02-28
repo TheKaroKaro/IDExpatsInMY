@@ -4,69 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Direktori Jasa - IndoMY</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        :root { --primary: #FF6B6B; --secondary: #4ECDC4; --dark: #2C3E50; --light: #f8f9fa; }
-        body { background: var(--light); color: var(--dark); line-height: 1.6; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        
-        /* Navigation (same as index) */
-        nav { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
-        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 20px; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); text-decoration: none; }
-        .nav-links { display: flex; gap: 2rem; }
-        .nav-links a { text-decoration: none; color: var(--dark); font-weight: 500; }
-        .mobile-menu-btn { display: none; font-size: 1.5rem; cursor: pointer; }
-        
-        /* Page Header */
-        .page-header { background: linear-gradient(135deg, var(--primary), #FF8E8E); color: white; padding: 2rem 0; margin-bottom: 2rem; }
-        .page-header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
-        
-        /* Search & Filter */
-        .search-section { background: white; border-radius: 10px; padding: 1.5rem; margin-bottom: 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .search-box { display: flex; gap: 1rem; margin-bottom: 1rem; }
-        .search-box input { flex: 1; padding: 0.8rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
-        .search-box button { padding: 0.8rem 1.5rem; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; }
-        .filter-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-        .filter-tag { padding: 0.5rem 1rem; background: var(--light); border: 1px solid #ddd; border-radius: 20px; cursor: pointer; transition: all 0.3s; }
-        .filter-tag:hover, .filter-tag.active { background: var(--primary); color: white; border-color: var(--primary); }
-        
-        /* Grid */
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-        .service-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: all 0.3s; }
-        .service-card:hover { transform: translateY(-5px); box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-        .card-body { padding: 1.2rem; }
-        .card-category { color: var(--secondary); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.5rem; }
-        .card-title { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--dark); text-decoration: none; }
-        .stars { color: #FFD700; margin: 0.5rem 0; }
-        .card-meta { color: #666; font-size: 0.9rem; margin: 0.5rem 0; }
-        .btn { display: inline-block; padding: 0.5rem 1rem; background: var(--primary); color: white; text-decoration: none; border-radius: 5px; margin-top: 0.5rem; }
-        
-        /* Pagination */
-        .pagination { display: flex; justify-content: center; gap: 0.5rem; margin: 2rem 0; }
-        .page-btn { padding: 0.5rem 1rem; border: 1px solid #ddd; background: white; cursor: pointer; border-radius: 5px; }
-        .page-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-        
-        .loading { text-align: center; padding: 3rem; color: #666; }
-        
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .mobile-menu-btn { display: block; }
-            .search-box { flex-direction: column; }
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
 </head>
 <body>
-    <nav>
-        <div class="nav-container">
+    <nav class="navbar">
+        <div class="container">
             <a href="/" class="logo">IndoMY</a>
-            <div class="nav-links" id="navLinks">
-                <a href="/services.html">Direktori</a>
-                <a href="/articles.html">Artikel</a>
-                <a href="/submit-service.html">Tambah Jasa</a>
-                <a href="/submit-article.html">Tulis Artikel</a>
+            <div class="nav-links">
+                <a href="services.html">Direktori Jasa</a>
+                <a href="articles.html">Artikel</a>
+                <a href="submit-service.html">Tambah Jasa</a>
+                <a href="submit-article.html">Tulis Artikel</a>
             </div>
-            <div class="mobile-menu-btn" onclick="document.getElementById('navLinks').classList.toggle('active')">☰</div>
         </div>
     </nav>
 
@@ -82,7 +34,7 @@
         <div class="search-section">
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="Cari jasa atau nama...">
-                <button onclick="searchServices()">Cari</button>
+                <button onclick="searchServices()" class="btn btn-primary">Cari</button>
             </div>
             <div class="filter-tags" id="categoryFilters">
                 <span class="filter-tag active" data-category="all">Semua</span>
@@ -100,7 +52,7 @@
         </div>
 
         <!-- Results -->
-        <div id="servicesContainer" class="services-grid">
+        <div id="servicesContainer" class="grid grid-3">
             <div class="loading">Memuat direktori...</div>
         </div>
 
@@ -108,9 +60,9 @@
         <div class="pagination" id="pagination"></div>
     </main>
 
-    <footer style="background: var(--dark); color: white; padding: 2rem 0; margin-top: 3rem;">
-        <div class="container" style="text-align: center;">
-            © 2024 IndoMY - Komunitas Indonesia di Malaysia
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 IndoMY - Komunitas Indonesia di Malaysia</p>
         </div>
     </footer>
 
@@ -119,64 +71,67 @@
         let currentCategory = 'all';
         let currentSearch = '';
         const itemsPerPage = 12;
+        let allServices = [];
 
         async function loadServices() {
-            const container = document.getElementById('servicesContainer');
-            container.innerHTML = '<div class="loading">Memuat...</div>';
-
             try {
-                const res = await fetch('/api/services');
-                const data = await res.json();
-                
-                let services = data.records || [];
-                
-                // Filter by category
-                if (currentCategory !== 'all') {
-                    services = services.filter(s => s.fields.Category === currentCategory);
-                }
-                
-                // Filter by search
-                if (currentSearch) {
-                    const search = currentSearch.toLowerCase();
-                    services = services.filter(s => 
-                        s.fields.Name.toLowerCase().includes(search) ||
-                        s.fields.Description.toLowerCase().includes(search)
-                    );
-                }
-                
-                // Paginate
-                const totalPages = Math.ceil(services.length / itemsPerPage);
-                const start = (currentPage - 1) * itemsPerPage;
-                const paginatedServices = services.slice(start, start + itemsPerPage);
-                
-                if (paginatedServices.length === 0) {
-                    container.innerHTML = '<div class="loading">Tidak ada jasa ditemukan</div>';
-                } else {
-                    container.innerHTML = paginatedServices.map(s => {
-                        const f = s.fields;
-                        const stars = renderStars(f.AverageRating);
-                        return `
-                            <div class="service-card">
-                                <div class="card-body">
-                                    <div class="card-category">${f.Category}</div>
-                                    <h3 class="card-title">${f.Name}</h3>
-                                    <div class="stars">${stars} (${f.ReviewsCount || 0} ulasan)</div>
-                                    <p><small>📍 ${f.Area || 'Malaysia'}</small></p>
-                                    <p>${f.Description.substring(0, 120)}...</p>
-                                    <div class="card-meta">📞 ${f.Phone}</div>
-                                    <a href="/service-detail.html?id=${s.id}" class="btn">Lihat Detail</a>
+                allServices = await ServicesAPI.getApproved();
+                filterAndDisplayServices();
+            } catch (error) {
+                document.getElementById('servicesContainer').innerHTML = 
+                    '<div class="loading">Gagal memuat data. Refresh halaman.</div>';
+            }
+        }
+
+        function filterAndDisplayServices() {
+            let filtered = [...allServices];
+            
+            // Filter by category
+            if (currentCategory !== 'all') {
+                filtered = filtered.filter(s => s.category === currentCategory);
+            }
+            
+            // Filter by search
+            if (currentSearch) {
+                const search = currentSearch.toLowerCase();
+                filtered = filtered.filter(s => 
+                    s.name.toLowerCase().includes(search) ||
+                    s.description.toLowerCase().includes(search)
+                );
+            }
+            
+            // Paginate
+            const totalPages = Math.ceil(filtered.length / itemsPerPage);
+            const start = (currentPage - 1) * itemsPerPage;
+            const paginatedServices = filtered.slice(start, start + itemsPerPage);
+            
+            // Display
+            const container = document.getElementById('servicesContainer');
+            
+            if (paginatedServices.length === 0) {
+                container.innerHTML = '<div class="loading">Tidak ada jasa ditemukan</div>';
+            } else {
+                container.innerHTML = paginatedServices.map(service => {
+                    const stars = renderStars(service.average_rating);
+                    return `
+                        <div class="card">
+                            <div class="card-body">
+                                <span class="category">${service.category}</span>
+                                <h3><a href="service-detail.html?id=${service.id}">${service.name}</a></h3>
+                                <div class="rating">${stars} (${service.reviews_count || 0} ulasan)</div>
+                                <p>${service.description.substring(0, 120)}...</p>
+                                <small>📍 ${service.area || 'Malaysia'}</small>
+                                <div style="margin-top: 1rem;">
+                                    <a href="service-detail.html?id=${service.id}" class="btn btn-small">Lihat Detail</a>
                                 </div>
                             </div>
-                        `;
-                    }).join('');
-                }
-                
-                // Update pagination
-                renderPagination(totalPages);
-                
-            } catch (error) {
-                container.innerHTML = '<div class="loading">Gagal memuat data. Refresh halaman.</div>';
+                        </div>
+                    `;
+                }).join('');
             }
+            
+            // Update pagination
+            renderPagination(totalPages);
         }
 
         function renderStars(avg) {
@@ -202,14 +157,14 @@
 
         function goToPage(page) {
             currentPage = page;
-            loadServices();
+            filterAndDisplayServices();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function searchServices() {
             currentSearch = document.getElementById('searchInput').value;
             currentPage = 1;
-            loadServices();
+            filterAndDisplayServices();
         }
 
         // Category filter click handlers
@@ -219,17 +174,16 @@
                 tag.classList.add('active');
                 currentCategory = tag.dataset.category;
                 currentPage = 1;
-                loadServices();
+                filterAndDisplayServices();
             });
         });
-
-        // Load on page load
-        loadServices();
 
         // Enter key search
         document.getElementById('searchInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') searchServices();
         });
+
+        loadServices();
     </script>
 </body>
 </html>

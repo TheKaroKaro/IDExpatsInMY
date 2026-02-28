@@ -3,226 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Indo in MY - Komunitas Indonesia di Malaysia</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        :root { --primary: #FF6B6B; --secondary: #4ECDC4; --dark: #2C3E50; --light: #f8f9fa; }
-        body { background: var(--light); color: var(--dark); line-height: 1.6; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        
-        /* Navigation */
-        nav { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
-        .nav-container { max-width: 1200px; margin: 0 auto; padding: 1rem 20px; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.5rem; font-weight: 700; color: var(--primary); text-decoration: none; }
-        .nav-links { display: flex; gap: 2rem; }
-        .nav-links a { text-decoration: none; color: var(--dark); font-weight: 500; transition: color 0.3s; }
-        .nav-links a:hover { color: var(--primary); }
-        .mobile-menu-btn { display: none; font-size: 1.5rem; cursor: pointer; }
-        
-        /* Hero Section */
-        .hero { background: linear-gradient(135deg, var(--primary), #FF8E8E); color: white; padding: 4rem 0; margin-bottom: 3rem; text-align: center; }
-        .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
-        .hero p { font-size: 1.2rem; max-width: 600px; margin: 0 auto 2rem; }
-        .hero-buttons { display: flex; gap: 1rem; justify-content: center; }
-        .btn { padding: 0.8rem 1.5rem; border-radius: 30px; text-decoration: none; font-weight: 600; transition: transform 0.3s; }
-        .btn:hover { transform: translateY(-2px); }
-        .btn-primary { background: white; color: var(--primary); }
-        .btn-outline { border: 2px solid white; color: white; }
-        
-        /* Featured Article */
-        .featured-article { background: white; border-radius: 15px; overflow: hidden; margin-bottom: 3rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .featured-img { width: 100%; height: 300px; object-fit: cover; }
-        .featured-content { padding: 2rem; }
-        .featured-category { background: var(--secondary); color: white; padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.9rem; display: inline-block; margin-bottom: 1rem; }
-        
-        /* Section Headers */
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin: 2rem 0 1.5rem; }
-        .section-header h2 { font-size: 1.8rem; color: var(--dark); border-left: 5px solid var(--primary); padding-left: 1rem; }
-        .view-all { color: var(--primary); text-decoration: none; font-weight: 500; }
-        
-        /* Grid Layouts */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
-        
-        /* Cards */
-        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: all 0.3s; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-        .card-img { width: 100%; height: 180px; object-fit: cover; }
-        .card-body { padding: 1.2rem; }
-        .card-category { color: var(--secondary); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.5rem; }
-        .card-title { font-size: 1.1rem; margin-bottom: 0.5rem; }
-        .card-title a { color: var(--dark); text-decoration: none; }
-        .card-meta { color: #666; font-size: 0.9rem; margin: 0.5rem 0; }
-        .stars { color: #FFD700; margin: 0.5rem 0; }
-        
-        /* Loading & Error States */
-        .loading { text-align: center; padding: 3rem; color: #666; }
-        .error { text-align: center; padding: 3rem; color: var(--primary); }
-        
-        /* Footer */
-        footer { background: var(--dark); color: white; padding: 3rem 0 1.5rem; margin-top: 4rem; }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
-        .footer-links a { color: #999; text-decoration: none; display: block; margin-bottom: 0.5rem; }
-        .copyright { text-align: center; color: #666; padding-top: 1.5rem; border-top: 1px solid #444; }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; flex-direction: column; padding: 1rem; gap: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-            .nav-links.active { display: flex; }
-            .mobile-menu-btn { display: block; }
-            .hero h1 { font-size: 2rem; }
-            .hero-buttons { flex-direction: column; align-items: center; }
-            .grid { grid-template-columns: 1fr; }
-        }
-    </style>
+    <title>IndoMY - Komunitas Indonesia di Malaysia</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <nav>
-        <div class="nav-container">
+    <nav class="navbar">
+        <div class="container">
             <a href="/" class="logo">IndoMY</a>
-            <div class="nav-links" id="navLinks">
-                <a href="/services.html">Direktori</a>
-                <a href="/articles.html">Artikel</a>
-                <a href="/submit-service.html">Tambah Jasa</a>
-                <a href="/submit-article.html">Tulis Artikel</a>
+            <div class="nav-links">
+                <a href="services.html">Direktori Jasa</a>
+                <a href="articles.html">Artikel</a>
+                <a href="submit-service.html">Tambah Jasa</a>
+                <a href="submit-article.html">Tulis Artikel</a>
             </div>
-            <div class="mobile-menu-btn" onclick="document.getElementById('navLinks').classList.toggle('active')">☰</div>
         </div>
     </nav>
 
     <section class="hero">
         <div class="container">
             <h1>Selamat Datang di IndoMY</h1>
-            <p>Platform untuk komunitas Indonesia di Malaysia. Temukan jasa, baca tips, dan bantu sesama.</p>
+            <p>Platform komunitas Indonesia di Malaysia. Temukan jasa terpercaya dan artikel bermanfaat.</p>
             <div class="hero-buttons">
-                <a href="/submit-service.html" class="btn btn-primary">Tambah Jasa</a>
-                <a href="/services.html" class="btn btn-outline">Cari Jasa</a>
+                <a href="submit-service.html" class="btn btn-primary">Tambah Jasa</a>
+                <a href="services.html" class="btn btn-outline">Cari Jasa</a>
             </div>
         </div>
     </section>
 
     <main class="container">
         <!-- Featured Article -->
-        <div id="featuredArticle" class="featured-article">
-            <div class="loading">Memuat artikel unggulan...</div>
-        </div>
+        <section id="featured-article-section">
+            <h2>Artikel Unggulan</h2>
+            <div id="featured-article" class="featured-card">
+                <p class="loading">Memuat...</p>
+            </div>
+        </section>
 
         <!-- Recent Articles -->
-        <div class="section-header">
-            <h2>Artikel Terbaru</h2>
-            <a href="/articles.html" class="view-all">Lihat Semua →</a>
-        </div>
-        <div id="articlesGrid" class="grid">
-            <div class="loading">Memuat artikel...</div>
-        </div>
+        <section>
+            <div class="section-header">
+                <h2>Artikel Terbaru</h2>
+                <a href="articles.html" class="view-all">Lihat Semua →</a>
+            </div>
+            <div id="recent-articles" class="grid grid-3">
+                <p class="loading">Memuat...</p>
+            </div>
+        </section>
 
         <!-- Recent Services -->
-        <div class="section-header">
-            <h2>Jasa Terbaru</h2>
-            <a href="/services.html" class="view-all">Lihat Semua →</a>
-        </div>
-        <div id="servicesGrid" class="grid">
-            <div class="loading">Memuat jasa...</div>
-        </div>
+        <section>
+            <div class="section-header">
+                <h2>Jasa Terbaru</h2>
+                <a href="services.html" class="view-all">Lihat Semua →</a>
+            </div>
+            <div id="recent-services" class="grid grid-3">
+                <p class="loading">Memuat...</p>
+            </div>
+        </section>
     </main>
 
     <footer>
         <div class="container">
-            <div class="footer-grid">
-                <div>
-                    <h4>Tentang IndoMY</h4>
-                    <p>Platform komunitas untuk membantu sesama WNI di Malaysia.</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Link Cepat</h4>
-                    <a href="/services.html">Direktori Jasa</a>
-                    <a href="/articles.html">Artikel</a>
-                    <a href="/submit-service.html">Tambah Jasa</a>
-                    <a href="/submit-article.html">Tulis Artikel</a>
-                </div>
-                <div class="footer-links">
-                    <h4>Kontak</h4>
-                    <a href="#">Instagram</a>
-                    <a href="#">Telegram</a>
-                    <a href="#">WhatsApp</a>
-                </div>
-            </div>
-            <div class="copyright">
-                © 2024 IndoMY - Komunitas Indonesia di Malaysia
-            </div>
+            <p>&copy; 2024 IndoMY - Komunitas Indonesia di Malaysia</p>
         </div>
     </footer>
 
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/turnstile.js"></script>
     <script>
-        async function fetchAPI(url) {
-            const res = await fetch(url);
-            if (!res.ok) throw new Error('Network error');
-            return res.json();
-        }
-
-        function renderStars(avg) {
-            if (!avg) return '☆☆☆☆☆';
-            const full = Math.floor(avg);
-            const half = avg - full >= 0.5 ? 1 : 0;
-            const empty = 5 - full - half;
-            return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);
-        }
-
+        // Load homepage data
         async function loadHomepage() {
             try {
                 // Load featured article
-                const featured = await fetchAPI('/api/articles?featured=true');
-                if (featured.record) {
-                    const f = featured.record.fields;
-                    document.getElementById('featuredArticle').innerHTML = `
-                        <img src="${f.ImageURL || 'https://via.placeholder.com/1200x300'}" alt="${f.Title}" class="featured-img">
+                const featured = await ArticlesAPI.getFeatured();
+                const featuredEl = document.getElementById('featured-article');
+                
+                if (featured) {
+                    featuredEl.innerHTML = `
+                        <img src="${featured.image_url || 'https://via.placeholder.com/800x400'}" alt="${featured.title}">
                         <div class="featured-content">
-                            <span class="featured-category">${f.Category || 'Unggulan'}</span>
-                            <h2>${f.Title}</h2>
-                            <p>${f.Content?.substring(0, 200)}...</p>
-                            <p><small>Oleh ${f.Author || 'Anonymous'} • ${f.CreatedAt}</small></p>
-                            <a href="/article-detail.html?slug=${f.Slug}" class="btn btn-primary" style="display: inline-block; margin-top: 1rem;">Baca Selengkapnya</a>
+                            <h3>${featured.title}</h3>
+                            <p>${featured.content.substring(0, 200)}...</p>
+                            <a href="article-detail.html?slug=${featured.slug}" class="btn btn-small">Baca Selengkapnya</a>
                         </div>
                     `;
+                } else {
+                    featuredEl.innerHTML = '<p>Belum ada artikel unggulan.</p>';
                 }
-
+                
                 // Load recent articles
-                const articles = await fetchAPI('/api/articles?limit=3');
-                if (articles.records?.length) {
-                    document.getElementById('articlesGrid').innerHTML = articles.records.map(r => `
+                const articles = await ArticlesAPI.getApproved({ limit: 3 });
+                const articlesEl = document.getElementById('recent-articles');
+                
+                if (articles.length > 0) {
+                    articlesEl.innerHTML = articles.map(article => `
                         <div class="card">
-                            <img src="${r.fields.ImageURL || 'https://via.placeholder.com/400x200'}" class="card-img" alt="">
+                            <img src="${article.image_url || 'https://via.placeholder.com/400x200'}" alt="${article.title}">
                             <div class="card-body">
-                                <div class="card-category">${r.fields.Category || 'Artikel'}</div>
-                                <h3 class="card-title"><a href="/article-detail.html?slug=${r.fields.Slug}">${r.fields.Title}</a></h3>
-                                <p>${r.fields.Content?.substring(0, 100)}...</p>
-                                <div class="card-meta">Oleh ${r.fields.Author || 'Anonymous'} • ${r.fields.CreatedAt}</div>
+                                <h3><a href="article-detail.html?slug=${article.slug}">${article.title}</a></h3>
+                                <p>${article.content.substring(0, 100)}...</p>
+                                <small>Oleh ${article.author} • ${new Date(article.created_at).toLocaleDateString()}</small>
                             </div>
                         </div>
                     `).join('');
+                } else {
+                    articlesEl.innerHTML = '<p>Belum ada artikel.</p>';
                 }
-
+                
                 // Load recent services
-                const services = await fetchAPI('/api/services?limit=3');
-                if (services.records?.length) {
-                    document.getElementById('servicesGrid').innerHTML = services.records.map(r => `
+                const services = await ServicesAPI.getApproved({ limit: 3 });
+                const servicesEl = document.getElementById('recent-services');
+                
+                if (services.length > 0) {
+                    servicesEl.innerHTML = services.map(service => `
                         <div class="card">
                             <div class="card-body">
-                                <div class="card-category">${r.fields.Category}</div>
-                                <h3 class="card-title"><a href="/service-detail.html?id=${r.id}">${r.fields.Name}</a></h3>
-                                <div class="stars">${renderStars(r.fields.AverageRating)} (${r.fields.ReviewsCount || 0})</div>
-                                <p><small>📍 ${r.fields.Area || 'Malaysia'}</small></p>
-                                <p>${r.fields.Description?.substring(0, 100)}...</p>
-                                <div class="card-meta">📞 ${r.fields.Phone}</div>
+                                <span class="category">${service.category}</span>
+                                <h3><a href="service-detail.html?id=${service.id}">${service.name}</a></h3>
+                                <div class="rating">⭐ ${service.average_rating} (${service.reviews_count})</div>
+                                <p>${service.description.substring(0, 100)}...</p>
+                                <small>📍 ${service.area || 'Malaysia'}</small>
                             </div>
                         </div>
                     `).join('');
+                } else {
+                    servicesEl.innerHTML = '<p>Belum ada jasa.</p>';
                 }
+                
             } catch (error) {
                 console.error('Error loading homepage:', error);
-                document.getElementById('featuredArticle').innerHTML = '<div class="error">Gagal memuat data. Silakan refresh.</div>';
             }
         }
-
+        
         loadHomepage();
     </script>
 </body>

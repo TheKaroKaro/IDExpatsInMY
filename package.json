@@ -1,9 +1,0 @@
-{
-  "name": "indomy",
-  "version": "1.0.0",
-  "description": "Indonesia community directory in Malaysia",
-  "scripts": {
-    "vercel-build": "echo 'No build required'"
-  },
-  "dependencies": {}
-}

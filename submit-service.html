@@ -4,58 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tambah Jasa - IndoMY</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        :root { --primary: #FF6B6B; --secondary: #4ECDC4; --dark: #2C3E50; }
-        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 2rem 0; }
-        .container { max-width: 600px; margin: 0 auto; padding: 0 20px; }
-        
-        .form-card { background: white; border-radius: 20px; padding: 2rem; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
-        h1 { color: var(--primary); margin-bottom: 0.5rem; }
-        .subtitle { color: #666; margin-bottom: 2rem; }
-        
-        .form-group { margin-bottom: 1.5rem; }
-        label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark); }
-        .form-control { width: 100%; padding: 0.8rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem; transition: all 0.3s; }
-        .form-control:focus { border-color: var(--primary); outline: none; }
-        select.form-control { background: white; }
-        textarea.form-control { min-height: 100px; resize: vertical; }
-        
-        .honeypot { display: none; }
-        
-        .btn { width: 100%; padding: 1rem; background: var(--primary); color: white; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: transform 0.3s; }
-        .btn:hover { transform: translateY(-2px); }
-        
-        .alert { padding: 1rem; border-radius: 10px; margin-bottom: 1rem; display: none; }
-        .alert-success { background: #d4edda; color: #155724; display: block; }
-        .alert-error { background: #f8d7da; color: #721c24; display: block; }
-        
-        .math-question { background: var(--light); padding: 1rem; border-radius: 10px; margin: 1rem 0; }
-    </style>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="form-card">
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">IndoMY</a>
+            <div class="nav-links">
+                <a href="services.html">Direktori Jasa</a>
+                <a href="articles.html">Artikel</a>
+                <a href="submit-service.html">Tambah Jasa</a>
+                <a href="submit-article.html">Tulis Artikel</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="form-container">
             <h1>➕ Tambah Jasa</h1>
             <p class="subtitle">Bagikan informasi jasa untuk membantu komunitas</p>
             
             <div id="alert" class="alert"></div>
             
             <form id="serviceForm">
-                <!-- Honeypot -->
-                <div class="honeypot">
+                <!-- Honeypot (anti-spam) -->
+                <div style="display: none;">
                     <label>Jangan diisi</label>
                     <input type="text" id="website" name="website">
                 </div>
                 
                 <div class="form-group">
-                    <label>Nama Jasa/Bisnis *</label>
+                    <label for="name">Nama Jasa/Bisnis *</label>
                     <input type="text" id="name" class="form-control" required>
                 </div>
                 
                 <div class="form-group">
-                    <label>Kategori *</label>
+                    <label for="category">Kategori *</label>
                     <select id="category" class="form-control" required>
                         <option value="">Pilih kategori</option>
                         <option value="Locksmith">🔑 Tukang Kunci</option>
@@ -73,98 +57,107 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>Nomor Telepon *</label>
+                    <label for="phone">Nomor Telepon *</label>
                     <input type="tel" id="phone" class="form-control" required placeholder="+60 12-345 6789">
                 </div>
                 
                 <div class="form-group">
-                    <label>Nomor WhatsApp (Opsional)</label>
+                    <label for="whatsapp">Nomor WhatsApp (Opsional)</label>
                     <input type="tel" id="whatsapp" class="form-control" placeholder="+60 12-345 6789">
                 </div>
                 
                 <div class="form-group">
-                    <label>Area/Lokasi (Opsional)</label>
+                    <label for="area">Area/Lokasi (Opsional)</label>
                     <input type="text" id="area" class="form-control" placeholder="Contoh: KL, PJ, Selangor">
                 </div>
                 
                 <div class="form-group">
-                    <label>Alamat Lengkap (Opsional)</label>
+                    <label for="address">Alamat Lengkap (Opsional)</label>
                     <textarea id="address" class="form-control" rows="3"></textarea>
                 </div>
                 
                 <div class="form-group">
-                    <label>Deskripsi *</label>
+                    <label for="description">Deskripsi *</label>
                     <textarea id="description" class="form-control" rows="4" required placeholder="Jelaskan jasa yang ditawarkan..."></textarea>
                 </div>
                 
                 <div class="form-group">
-                    <label>Nama Anda *</label>
+                    <label for="submittedBy">Nama Anda *</label>
                     <input type="text" id="submittedBy" class="form-control" required>
                 </div>
                 
-                <!-- Simple Math Captcha -->
-                <div class="math-question">
-                    <label>Berapa 5 + 3? *</label>
-                    <input type="number" id="mathCheck" class="form-control" required style="margin-top: 0.5rem;">
-                </div>
-                
-                <!-- Turnstile -->
+                <!-- Cloudflare Turnstile -->
                 <div class="form-group">
-                    <div class="cf-turnstile" data-sitekey="0x4AAAAAACjUantrQjJMTN2W"></div>
+                    <div id="turnstile-widget"></div>
                 </div>
                 
-                <button type="submit" class="btn">Kirim untuk Ditinjau</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Kirim untuk Ditinjau</button>
             </form>
         </div>
-    </div>
+    </main>
 
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 IndoMY - Komunitas Indonesia di Malaysia</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/turnstile.js"></script>
     <script>
+        let turnstileWidgetId = null;
+        
+        // Initialize Turnstile when API is ready
+        window.onloadTurnstileCallback = function() {
+            turnstileWidgetId = turnstile.render('#turnstile-widget', {
+                sitekey: TURNSTILE_CONFIG.siteKey,
+                theme: 'light'
+            });
+        };
+        
+        // Form submission
         document.getElementById('serviceForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             // Honeypot check
-            if (document.getElementById('website').value) return;
-            
-            // Math check
-            const mathAnswer = parseInt(document.getElementById('mathCheck').value);
-            if (mathAnswer !== 8) {
-                showAlert('Jawaban math salah. Coba lagi.', false);
-                return;
+            if (document.getElementById('website').value) {
+                return; // Bot detected
             }
             
             // Get Turnstile token
-            const token = document.querySelector('[name="cf-turnstile-response"]')?.value;
+            const turnstileToken = turnstile.getResponse(turnstileWidgetId);
+            if (!turnstileToken) {
+                showAlert('Please complete the verification', false);
+                return;
+            }
             
-            const formData = {
+            // Prepare data
+            const serviceData = {
                 name: document.getElementById('name').value,
                 category: document.getElementById('category').value,
                 phone: document.getElementById('phone').value,
-                whatsapp: document.getElementById('whatsapp').value,
-                area: document.getElementById('area').value,
-                address: document.getElementById('address').value,
+                whatsapp: document.getElementById('whatsapp').value || null,
+                area: document.getElementById('area').value || null,
+                address: document.getElementById('address').value || null,
                 description: document.getElementById('description').value,
-                submittedBy: document.getElementById('submittedBy').value,
-                turnstileToken: token
+                submitted_by: document.getElementById('submittedBy').value
             };
             
             try {
-                const res = await fetch('/api/services', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
+                const result = await ServicesAPI.submit(serviceData, turnstileToken);
                 
-                const data = await res.json();
+                showAlert('✅ Terima kasih! Jasa Anda akan ditinjau admin.', true);
+                e.target.reset();
+                turnstile.reset(turnstileWidgetId);
                 
-                if (res.ok) {
-                    showAlert('✅ Terima kasih! Jasa Anda akan ditinjau admin.', true);
-                    e.target.reset();
-                    if (window.turnstile) window.turnstile.reset();
-                } else {
-                    showAlert(data.error || 'Gagal mengirim. Coba lagi.', false);
-                }
             } catch (error) {
-                showAlert('Gagal mengirim. Cek koneksi internet.', false);
+                console.error('Submission error:', error);
+                showAlert('Gagal mengirim. Silakan coba lagi.', false);
+                turnstile.reset(turnstileWidgetId);
             }
         });
         
