@@ -65,51 +65,64 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById('articleForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const token = document.querySelector('[name="cf-turnstile-response"]')?.value;
-            
-            const formData = {
-                title: document.getElementById('title').value,
-                content: document.getElementById('content').value,
-                author: document.getElementById('author').value,
-                category: document.getElementById('category').value,
-                imageUrl: document.getElementById('imageUrl').value,
-                turnstileToken: token
-            };
-            
-            try {
-                const res = await fetch('/api/articles', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
-                
-                const data = await res.json();
-                
-                if (res.ok) {
-                    showAlert('✅ Artikel berhasil dikirim! Menunggu persetujuan admin.', true);
-                    e.target.reset();
-                    if (window.turnstile) window.turnstile.reset();
-                } else {
-                    showAlert(data.error || 'Gagal mengirim artikel', false);
-                }
-            } catch (error) {
-                showAlert('Gagal mengirim artikel', false);
-            }
+   <!-- Remove the old script and replace with this -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script src="js/config.js"></script>
+<script src="js/supabase.js"></script>
+<script src="js/turnstile.js"></script>
+<script>
+    let turnstileWidgetId = null;
+    
+    window.onloadTurnstileCallback = function() {
+        turnstileWidgetId = turnstile.render('#turnstile-widget', {
+            sitekey: TURNSTILE_CONFIG.siteKey,
+            theme: 'light'
         });
+    };
+    
+    document.getElementById('articleForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
         
-        function showAlert(message, isSuccess) {
-            const alert = document.getElementById('alert');
-            alert.textContent = message;
-            alert.className = `alert ${isSuccess ? 'alert-success' : 'alert-error'}`;
-            
-            setTimeout(() => {
-                alert.style.display = 'none';
-            }, 5000);
+        const token = turnstile.getResponse(turnstileWidgetId);
+        if (!token) {
+            alert('Please complete the verification');
+            return;
         }
-    </script>
+        
+        const articleData = {
+            title: document.getElementById('title').value,
+            content: document.getElementById('content').value,
+            author: document.getElementById('author').value || 'Anonymous',
+            category: document.getElementById('category').value || 'Umum',
+            imageUrl: document.getElementById('imageUrl').value
+        };
+        
+        try {
+            // Use the ArticlesAPI from supabase.js - NO API ENDPOINT NEEDED
+            const result = await ArticlesAPI.submit(articleData, token);
+            
+            showAlert('✅ Artikel berhasil dikirim! Menunggu persetujuan admin.', true);
+            e.target.reset();
+            turnstile.reset(turnstileWidgetId);
+            
+        } catch (error) {
+            console.error('Submission error:', error);
+            showAlert('Gagal mengirim artikel. Coba lagi.', false);
+            turnstile.reset(turnstileWidgetId);
+        }
+    });
+    
+    function showAlert(message, isSuccess) {
+        const alert = document.getElementById('alert');
+        alert.textContent = message;
+        alert.className = `alert ${isSuccess ? 'alert-success' : 'alert-error'}`;
+        alert.style.display = 'block';
+        
+        setTimeout(() => {
+            alert.style.display = 'none';
+        }, 5000);
+    }
+</script>
 </body>
 </html>
