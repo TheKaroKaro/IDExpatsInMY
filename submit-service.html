@@ -102,74 +102,108 @@
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    <script src="js/config.js"></script>
-    <script src="js/supabase.js"></script>
-    <script src="js/turnstile.js"></script>
-    <script>
-        let turnstileWidgetId = null;
+<script>
+    let turnstileWidgetId = null;
+    
+    // Wait for both DOM and Turnstile API to be ready
+    function initTurnstile() {
+        const container = document.getElementById('turnstile-widget');
+        if (!container) {
+            console.log('Container not ready yet, retrying...');
+            setTimeout(initTurnstile, 100);
+            return;
+        }
         
-        // Initialize Turnstile when API is ready
-        window.onloadTurnstileCallback = function() {
+        if (typeof turnstile === 'undefined') {
+            console.log('Turnstile not loaded yet, retrying...');
+            setTimeout(initTurnstile, 100);
+            return;
+        }
+        
+        try {
             turnstileWidgetId = turnstile.render('#turnstile-widget', {
                 sitekey: TURNSTILE_CONFIG.siteKey,
-                theme: 'light'
+                theme: 'light',
+                callback: function(token) {
+                    console.log('Turnstile success');
+                },
+                'error-callback': function(error) {
+                    console.error('Turnstile error:', error);
+                }
             });
+            console.log('Turnstile rendered successfully');
+        } catch (e) {
+            console.error('Failed to render Turnstile:', e);
+        }
+    }
+    
+    // Start when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initTurnstile);
+    } else {
+        initTurnstile();
+    }
+    
+    // Also set the global callback for Turnstile
+    window.onloadTurnstileCallback = initTurnstile;
+    
+    // Form submission
+    document.getElementById('serviceForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Honeypot check
+        if (document.getElementById('website').value) {
+            return;
+        }
+        
+        // Get Turnstile token
+        if (!turnstileWidgetId) {
+            showAlert('Verifikasi sedang dimuat, tunggu sebentar...', false);
+            return;
+        }
+        
+        const turnstileToken = turnstile.getResponse(turnstileWidgetId);
+        if (!turnstileToken) {
+            showAlert('Please complete the verification', false);
+            return;
+        }
+        
+        // Prepare data
+        const serviceData = {
+            name: document.getElementById('name').value,
+            category: document.getElementById('category').value,
+            phone: document.getElementById('phone').value,
+            whatsapp: document.getElementById('whatsapp').value || null,
+            area: document.getElementById('area').value || null,
+            address: document.getElementById('address').value || null,
+            description: document.getElementById('description').value,
+            submitted_by: document.getElementById('submittedBy').value
         };
         
-        // Form submission
-        document.getElementById('serviceForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        try {
+            const result = await ServicesAPI.submit(serviceData, turnstileToken);
             
-            // Honeypot check
-            if (document.getElementById('website').value) {
-                return; // Bot detected
-            }
+            showAlert('✅ Terima kasih! Jasa Anda akan ditinjau admin.', true);
+            e.target.reset();
+            turnstile.reset(turnstileWidgetId);
             
-            // Get Turnstile token
-            const turnstileToken = turnstile.getResponse(turnstileWidgetId);
-            if (!turnstileToken) {
-                showAlert('Please complete the verification', false);
-                return;
-            }
-            
-            // Prepare data
-            const serviceData = {
-                name: document.getElementById('name').value,
-                category: document.getElementById('category').value,
-                phone: document.getElementById('phone').value,
-                whatsapp: document.getElementById('whatsapp').value || null,
-                area: document.getElementById('area').value || null,
-                address: document.getElementById('address').value || null,
-                description: document.getElementById('description').value,
-                submitted_by: document.getElementById('submittedBy').value
-            };
-            
-            try {
-                const result = await ServicesAPI.submit(serviceData, turnstileToken);
-                
-                showAlert('✅ Terima kasih! Jasa Anda akan ditinjau admin.', true);
-                e.target.reset();
-                turnstile.reset(turnstileWidgetId);
-                
-            } catch (error) {
-                console.error('Submission error:', error);
-                showAlert('Gagal mengirim. Silakan coba lagi.', false);
-                turnstile.reset(turnstileWidgetId);
-            }
-        });
-        
-        function showAlert(message, isSuccess) {
-            const alert = document.getElementById('alert');
-            alert.textContent = message;
-            alert.className = `alert ${isSuccess ? 'alert-success' : 'alert-error'}`;
-            
-            setTimeout(() => {
-                alert.style.display = 'none';
-            }, 5000);
+        } catch (error) {
+            console.error('Submission error:', error);
+            showAlert('Gagal mengirim. Silakan coba lagi.', false);
+            turnstile.reset(turnstileWidgetId);
         }
-    </script>
+    });
+    
+    function showAlert(message, isSuccess) {
+        const alert = document.getElementById('alert');
+        alert.textContent = message;
+        alert.className = `alert ${isSuccess ? 'alert-success' : 'alert-error'}`;
+        alert.style.display = 'block';
+        
+        setTimeout(() => {
+            alert.style.display = 'none';
+        }, 5000);
+    }
+</script>
 </body>
 </html>
